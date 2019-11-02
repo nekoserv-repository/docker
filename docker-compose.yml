@@ -1,0 +1,226 @@
+# # #
+# to run: docker-compose run
+#
+
+## TODO1 : sabnzbd : configure local_ranges
+# in ~/docker-data/sabnzbd/config/sabnzbd.ini
+# to allow 'no access' in /sabnzbd/config/general/
+
+## TODO2 : remove root from flood
+
+## TODO3 : switch from sickchill to pyMedusa and upgrade rTorrent to 0.9.8
+
+
+version: '3.6'
+
+networks:
+  private0:
+
+services:
+  openvpn-client:
+    build: dockerfiles/openvpn-client
+    container_name: openvpn-client
+    cap_add:
+      - net_admin
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    restart: unless-stopped
+    networks:
+      - private0
+    expose:
+      - "5001"
+    dns: 8.8.8.8
+    read_only: true
+    tmpfs:
+      - /run
+      - /tmp
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /dev/net:/dev/net:z
+      - ~/docker-data/openvpn-config:/etc/openvpn/conf:ro
+    healthcheck:
+      test: ["CMD", "ping", "-c1", "-W1", "10.10.10.10"]
+      interval: 1m
+      timeout: 2s
+      retries: 1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rtorrent.rule=Host(`$DOMAIN`) && PathPrefix(`/rtorrent-rpc2`)"
+      - "traefik.http.routers.rtorrent.tls=true"
+      - "traefik.http.routers.rtorrent.middlewares=global-auth@file"
+      - "traefik.http.routers.rtorrent.tls.certresolver=default-ssl"
+
+
+  rtorrent:
+    build:
+      context: dockerfiles/rtorrent
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: rtorrent
+    restart: unless-stopped
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ~/docker-data/rtorrent/config:/home/rtorrent
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - ~/docker-data/rtorrent/session:/home/rtorrent/session
+      - ~/docker-data/rtorrent/watch:/home/rtorrent/watch
+      - ~/docker-data/nzbToMedia:/home/rtorrent/nzbToMedia
+    stdin_open: true
+    tty: true
+
+
+  sickchill:
+    build:
+      context: dockerfiles/sickchill
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: sickchill
+    networks:
+      - private0
+    expose:
+      - "8081"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ~/docker-data/sickchill/data:/home/sickchill/data
+      - ~/Downloads/complete/SERIES:/home/sickchill/dl
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - ~/Downloads/incomplete:/home/incomplete
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sickchill.rule=Host(`$DOMAIN`) && PathPrefix(`/sickchill`)"
+      - "traefik.http.routers.sickchill.tls=true"
+      - "traefik.http.routers.sickchill.middlewares=global-auth@file"
+      - "traefik.http.routers.sickchill.tls.certresolver=default-ssl"
+
+
+  couchpotato:
+    build:
+      context: dockerfiles/couchpotato
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: couchpotato
+    networks:
+      - private0
+    expose:
+      - "5050"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ~/docker-data/couchpotato/data:/home/couchpotato/data
+      - ~/Downloads/complete/FILMS:/home/couchpotato/dl
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - ~/Downloads/incomplete:/home/incomplete
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.couchpotato.rule=Host(`$DOMAIN`) && PathPrefix(`/couchpotato`)"
+      - "traefik.http.routers.couchpotato.tls=true"
+      - "traefik.http.routers.couchpotato.middlewares=global-auth@file"
+      - "traefik.http.routers.couchpotato.tls.certresolver=default-ssl"
+
+  sabnzbd:
+    build:
+      context: dockerfiles/sabnzbd
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: sabnzbd
+    networks:
+      - private0
+    expose:
+      - "8080"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ~/docker-data/sabnzbd/config:/home/sabnzbd/config
+      - ~/Downloads/complete/share:/home/sabnzbd/complete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - ~/Downloads/incomplete:/home/incomplete
+      - ~/docker-data/nzbToMedia:/home/sabnzbd/nzbToMedia
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sabnzbd.rule=Host(`$DOMAIN`) && PathPrefix(`/sabnzbd`)"
+      - "traefik.http.routers.sabnzbd.tls=true"
+      - "traefik.http.routers.sabnzbd.middlewares=global-auth@file"
+      - "traefik.http.routers.sabnzbd.tls.certresolver=default-ssl"
+
+
+  nzbhydra2:
+    build:
+      context: dockerfiles/nzbhydra2
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: nzbhydra2
+    networks:
+      - private0
+    expose:
+      - "5076"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ~/docker-data/nzbhydra2/data:/home/nzbhydra2/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nzbhydra2.rule=Host(`$DOMAIN`) && PathPrefix(`/nzbhydra`)"
+      - "traefik.http.routers.nzbhydra2.tls=true"
+      - "traefik.http.routers.nzbhydra2.middlewares=global-auth@file"
+      - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
+
+
+  flood:
+    build: dockerfiles/flood
+    container_name: flood
+    networks:
+      - private0
+    expose:
+      - "3000"
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    environment:
+      - TZ=Europe/Paris
+      - RTORRENT_SCGI_HOST=rtorrent
+      - RTORRENT_SOCK=true
+      - FLOOD_BASE_URI=/flood/
+    volumes:
+      - ~/docker-data/flood/data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flood.rule=Host(`$DOMAIN`) && PathPrefix(`/flood`)"
+      - "traefik.http.routers.flood.tls=true"
+      - "traefik.http.middlewares.flood-stripprefix.stripprefix.prefixes=/flood"
+      - "traefik.http.routers.flood.middlewares=auth-and-prefix"
+      - "traefik.http.middlewares.auth-and-prefix.chain.middlewares=global-auth@file,flood-stripprefix@docker"
+      - "traefik.http.routers.flood.tls.certresolver=default-ssl"
+
+
+  traefik:
+    image: traefik:2.0
+    container_name: traefik
+    restart: unless-stopped
+    networks:
+      - private0
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ~/docker-data/traefik/conf:/etc/traefik:ro
+      - ~/docker-data/traefik/ssl:/etc/traefik-ssl
