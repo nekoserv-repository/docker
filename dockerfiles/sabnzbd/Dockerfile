@@ -1,7 +1,7 @@
 FROM nekoserv/base-sabnzbd:0.1
 
 # Dokerfile's infos
-LABEL maintainer="Yuu" mail="yuu@fai.tld"
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
 LABEL description="Alpine + python2 + sabnzbd"
 LABEL website="https://github.com/TODO/docker-sabnzbd"
 LABEL version="1.0"

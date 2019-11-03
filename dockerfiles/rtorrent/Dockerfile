@@ -1,7 +1,7 @@
 FROM alpine:3.7
 
 # Dokerfile's infos
-LABEL maintainer="Yuu" mail="yuu@fai.tld"
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
 LABEL description="Alpine + python2 + rTorrent"
 LABEL website="https://github.com/TODO/docker-rtorrent"
 LABEL version="1.0"

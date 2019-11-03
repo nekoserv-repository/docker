@@ -6,11 +6,10 @@ ARG UID=1234
 ARG GID=1234
 
 # Dokerfile's infos
-LABEL maintainer="Yuu" mail="yuu@fai.tld" \
-      org.label-schema.name="Alpine & OpenVPN client" \
-      org.label-schema.description="Docker image for OpenVPN" \
-      org.label-schema.version=$VERSION \
-      org.label-schema.schema-version="1.0"
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
+LABEL description="Alpine + OpenVPN client"
+LABEL website="https://github.com/TODO/docker-openvpn-client"
+LABEL version="1.0"
 
 # copy entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
