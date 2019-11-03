@@ -1,7 +1,7 @@
 FROM python:2-alpine3.10
 
 # Dokerfile's infos
-LABEL maintainer="Yuu" mail="yuu@fai.tld"
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Base image for sabnzbd : alpine, python2, par2, etc"
 LABEL website="https://github.com/nekoserv-repository/docker"
 LABEL version="0.1"

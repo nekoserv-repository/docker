@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk11-openj9:jre11u-alpine-nightly
 
 # Dokerfile's infos
-LABEL maintainer="Yuu" mail="yuu@fai.tld"
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
 LABEL description="Alpine + openjdk11 + NZBHydra2"
 LABEL website="https://github.com/TODO/docker-nzbhydra2"
 LABEL version="1.0"
