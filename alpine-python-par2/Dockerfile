@@ -4,7 +4,7 @@ FROM python:2-alpine3.11
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Alpine + python2 + par2"
 LABEL website="https://github.com/nekoserv-repository/docker"
-LABEL version="0.1"
+LABEL version="0.2"
 
 # install stuff to build par2cmdline, then get par2, build, install & cleanup
 RUN apk add --no-cache curl g++ automake autoconf make && \
