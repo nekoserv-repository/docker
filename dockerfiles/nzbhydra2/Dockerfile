@@ -1,7 +1,7 @@
-FROM adoptopenjdk/openjdk11-openj9:jre11u-alpine-nightly
+FROM adoptopenjdk/openjdk11-openj9:alpine-jre
 
 # Dokerfile's infos
-LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Alpine + openjdk11 + NZBHydra2"
 LABEL website="https://github.com/TODO/docker-nzbhydra2"
 LABEL version="1.0"
@@ -9,8 +9,6 @@ LABEL version="1.0"
 # init
 ARG UID
 ARG GID
-ENV UID=$UID
-ENV GID=$GID
 
 # add group/user, then get app & cleanup
 RUN addgroup -g $GID nzbhydra2 && \
@@ -33,4 +31,4 @@ USER nzbhydra2
 VOLUME ["/home/nzbhydra2/data/"]
 
 # run!
-CMD ["/home/nzbhydra2/nzbhydra2", "--datafolder", "/home/nzbhydra2/data/"]
+ENTRYPOINT ["/home/nzbhydra2/nzbhydra2", "--datafolder", "/home/nzbhydra2/data/"]
