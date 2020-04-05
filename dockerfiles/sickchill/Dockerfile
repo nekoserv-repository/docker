@@ -1,7 +1,7 @@
 FROM python:2-alpine3.10
 
 # Dokerfile's infos
-LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Alpine + python2 + SickChill"
 LABEL website="https://github.com/TODO/docker-sickchill"
 LABEL version="1.0"
@@ -9,8 +9,6 @@ LABEL version="1.0"
 # init
 ARG UID
 ARG GID
-ENV UID=$UID
-ENV GID=$GID
 
 # install stuff, get app & cleanup
 RUN addgroup -g $GID sickchill && \
