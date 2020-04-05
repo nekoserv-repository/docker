@@ -1,7 +1,7 @@
-FROM nekoserv/base-sabnzbd:0.1
+FROM nekoserv/base-sabnzbd:0.2
 
 # Dokerfile's infos
-LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Alpine + python2 + sabnzbd"
 LABEL website="https://github.com/TODO/docker-sabnzbd"
 LABEL version="1.0"
@@ -9,8 +9,6 @@ LABEL version="1.0"
 # init
 ARG UID
 ARG GID
-ENV UID=$UID
-ENV GID=$GID
 
 # install stuff
 RUN addgroup -g $GID sabnzbd && \
