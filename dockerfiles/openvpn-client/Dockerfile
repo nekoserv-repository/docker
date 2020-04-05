@@ -1,9 +1,4 @@
-FROM alpine:3.10.2
-
-# config
-ARG VERSION=1.0
-ARG UID=1234
-ARG GID=1234
+FROM alpine:3.11
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
