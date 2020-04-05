@@ -6,10 +6,7 @@
 # in ~/docker-data/sabnzbd/config/sabnzbd.ini
 # to allow 'no access' in /sabnzbd/config/general/
 
-## TODO2 : remove root from flood
-
-## TODO3 : switch from sickchill to pyMedusa and upgrade rTorrent to 0.9.8
-
+## TODO2 : fix ipv6 (traefik)
 
 version: '3.6'
 
@@ -30,15 +27,15 @@ services:
     expose:
       - "5001"
     dns: 8.8.8.8
-    read_only: true
+    environment:
+      - TZ=Europe/Paris
     tmpfs:
       - /run
       - /tmp
-    environment:
-      - TZ=Europe/Paris
     volumes:
       - /dev/net:/dev/net:z
       - ~/docker-data/openvpn-config:/etc/openvpn/conf:ro
+    read_only: true
     healthcheck:
       test: ["CMD", "ping", "-c1", "-W1", "10.10.10.10"]
       interval: 1m
@@ -46,10 +43,12 @@ services:
       retries: 1
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rtorrent.rule=Host(`$DOMAIN`) && PathPrefix(`/rtorrent-rpc2`)"
-      - "traefik.http.routers.rtorrent.tls=true"
-      - "traefik.http.routers.rtorrent.middlewares=global-auth@file"
-      - "traefik.http.routers.rtorrent.tls.certresolver=default-ssl"
+      - "traefik.http.routers.jackett.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/jackett`)"
+      - "traefik.http.routers.jackett.tls=true"
+      - "traefik.http.routers.jackett.middlewares=global-auth@file"
+      - "traefik.http.routers.jackett.tls.certresolver=default-ssl"
+      - "traefik.http.routers.jackett.service=service-jackett"
+      - "traefik.http.services.service-jackett.loadbalancer.server.port=9117"
 
 
   rtorrent:
@@ -67,23 +66,50 @@ services:
     network_mode: service:openvpn-client
     environment:
       - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
     volumes:
       - ~/docker-data/rtorrent/config:/home/rtorrent
+      - ~/Downloads/incomplete:/home/incomplete
       - ~/Downloads/postprocessing:/home/postprocessing
       - ~/docker-data/rtorrent/session:/home/rtorrent/session
       - ~/docker-data/rtorrent/watch:/home/rtorrent/watch
       - ~/docker-data/nzbToMedia:/home/rtorrent/nzbToMedia
+      - /mnt/nas/share:/home/rtorrent/share
+    read_only: true
     stdin_open: true
     tty: true
 
 
-  sickchill:
+  jackett:
     build:
-      context: dockerfiles/sickchill
+      context: dockerfiles/jackett
       args:
         UID: 1000
         GID: 1000
-    container_name: sickchill
+    container_name: jackett
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/jackett/data:/home/jackett/data
+      - ~/Downloads/incomplete:/home/incomplete
+    read_only: true
+
+  medusa:
+    build:
+      context: dockerfiles/medusa
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: medusa
     networks:
       - private0
     expose:
@@ -91,17 +117,19 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
     volumes:
-      - ~/docker-data/sickchill/data:/home/sickchill/data
-      - ~/Downloads/complete/SERIES:/home/sickchill/dl
+      - ~/docker-data/medusa/data:/home/medusa/data
+      - /mnt/nas/SERIES:/home/medusa/dl
       - ~/Downloads/postprocessing:/home/postprocessing
-      - ~/Downloads/incomplete:/home/incomplete
+    read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sickchill.rule=Host(`$DOMAIN`) && PathPrefix(`/sickchill`)"
-      - "traefik.http.routers.sickchill.tls=true"
-      - "traefik.http.routers.sickchill.middlewares=global-auth@file"
-      - "traefik.http.routers.sickchill.tls.certresolver=default-ssl"
+      - "traefik.http.routers.medusa.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/medusa`)"
+      - "traefik.http.routers.medusa.tls=true"
+      - "traefik.http.routers.medusa.middlewares=global-auth@file"
+      - "traefik.http.routers.medusa.tls.certresolver=default-ssl"
 
 
   couchpotato:
@@ -118,17 +146,51 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
     volumes:
       - ~/docker-data/couchpotato/data:/home/couchpotato/data
-      - ~/Downloads/complete/FILMS:/home/couchpotato/dl
-      - ~/Downloads/postprocessing:/home/postprocessing
       - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/FILMS:/home/couchpotato/dl
+    read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.couchpotato.rule=Host(`$DOMAIN`) && PathPrefix(`/couchpotato`)"
+      - "traefik.http.routers.couchpotato.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/couchpotato`)"
       - "traefik.http.routers.couchpotato.tls=true"
       - "traefik.http.routers.couchpotato.middlewares=global-auth@file"
       - "traefik.http.routers.couchpotato.tls.certresolver=default-ssl"
+
+
+  #headphones:
+  #  build:
+  #    context: dockerfiles/headphones
+  #    args:
+  #      UID: 1000
+  #      GID: 1000
+  #  container_name: headphones
+  #  networks:
+  #    - private0
+  #  expose:
+  #    - "8181"
+  #  restart: unless-stopped
+  #  environment:
+  #    - TZ=Europe/Paris
+  #  tmpfs:
+  #    - /tmp
+  #  volumes:
+  #    - ~/docker-data/headphones/data:/home/headphones/data
+  #    - ~/Downloads/incomplete:/home/incomplete
+  #    - ~/Downloads/postprocessing:/home/postprocessing
+  #    - /mnt/nas/musics:/home/headphones/dl
+  #  read_only: true
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.headphones.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/headphones`)"
+  #    - "traefik.http.routers.headphones.tls=true"
+  #    - "traefik.http.routers.headphones.middlewares=global-auth@file"
+  #    - "traefik.http.routers.headphones.tls.certresolver=default-ssl"
+
 
   sabnzbd:
     build:
@@ -144,15 +206,18 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
     volumes:
       - ~/docker-data/sabnzbd/config:/home/sabnzbd/config
-      - ~/Downloads/complete/share:/home/sabnzbd/complete
-      - ~/Downloads/postprocessing:/home/postprocessing
       - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/share:/home/sabnzbd/complete
       - ~/docker-data/nzbToMedia:/home/sabnzbd/nzbToMedia
+    read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sabnzbd.rule=Host(`$DOMAIN`) && PathPrefix(`/sabnzbd`)"
+      - "traefik.http.routers.sabnzbd.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/sabnzbd`)"
       - "traefik.http.routers.sabnzbd.tls=true"
       - "traefik.http.routers.sabnzbd.middlewares=global-auth@file"
       - "traefik.http.routers.sabnzbd.tls.certresolver=default-ssl"
@@ -172,18 +237,25 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Paris
+    tmpfs:
+      - /tmp:exec
     volumes:
       - ~/docker-data/nzbhydra2/data:/home/nzbhydra2/data
+    read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nzbhydra2.rule=Host(`$DOMAIN`) && PathPrefix(`/nzbhydra`)"
+      - "traefik.http.routers.nzbhydra2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/nzbhydra`)"
       - "traefik.http.routers.nzbhydra2.tls=true"
       - "traefik.http.routers.nzbhydra2.middlewares=global-auth@file"
       - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
 
 
   flood:
-    build: dockerfiles/flood
+    build:
+      context: dockerfiles/flood
+      args:
+        UID: 1000
+        GID: 1000
     container_name: flood
     networks:
       - private0
@@ -196,12 +268,15 @@ services:
       - TZ=Europe/Paris
       - RTORRENT_SCGI_HOST=rtorrent
       - RTORRENT_SOCK=true
-      - FLOOD_BASE_URI=/flood/
+      - FLOOD_SECRET=$ENV_FLOOD_SECRET
+    tmpfs:
+      - /tmp
     volumes:
       - ~/docker-data/flood/data:/data
+    read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.flood.rule=Host(`$DOMAIN`) && PathPrefix(`/flood`)"
+      - "traefik.http.routers.flood.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/flood`)"
       - "traefik.http.routers.flood.tls=true"
       - "traefik.http.middlewares.flood-stripprefix.stripprefix.prefixes=/flood"
       - "traefik.http.routers.flood.middlewares=auth-and-prefix"
@@ -209,9 +284,38 @@ services:
       - "traefik.http.routers.flood.tls.certresolver=default-ssl"
 
 
+  nginx:
+    build:
+      context: dockerfiles/nginx
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: nginx
+    networks:
+      - private0
+    expose:
+      - "18080"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/nginx/static:/home/nginx/static
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/`)"
+      - "traefik.http.routers.nginx.tls=true"
+      - "traefik.http.routers.nginx.middlewares=global-auth@file"
+      - "traefik.http.routers.nginx.tls.certresolver=default-ssl"
+
+
   traefik:
-    image: traefik:2.0
+    image: traefik:2.1
     container_name: traefik
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
     restart: unless-stopped
     networks:
       - private0
@@ -220,7 +324,64 @@ services:
       - "443:443"
     environment:
       - TZ=Europe/Paris
+    environment:
+      - OVH_ENDPOINT=$ENV_OVH_ENDPOINT
+      - OVH_APPLICATION_KEY=$ENV_OVH_APPLICATION_KEY
+      - OVH_APPLICATION_SECRET=$ENV_OVH_APPLICATION_SECRET
+      - OVH_CONSUMER_KEY=$ENV_OVH_CONSUMER_KEY
+    tmpfs:
+      - /tmp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ~/docker-data/traefik/conf:/etc/traefik:ro
       - ~/docker-data/traefik/ssl:/etc/traefik-ssl
+    read_only: true
+
+
+  rutorrent:
+    build:
+      context: dockerfiles/rutorrent
+      args:
+        UID: 1000
+        GID: 1000
+        CONTAINER_NAME: openvpn-client
+        RTORRENT_PORT: 5001
+    container_name: rutorrent
+    networks:
+      - private0
+    expose:
+      - "18080"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/rutorrent:/home/rutorrent/
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rutorrent.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/rutorrent`)"
+      - "traefik.http.routers.rutorrent.tls=true"
+      - "traefik.http.routers.rutorrent.middlewares=global-auth@file"
+      - "traefik.http.routers.rutorrent.tls.certresolver=default-ssl"
+
+  rutorrent-fpm:
+    build:
+      context: dockerfiles/rutorrent-fpm
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: rutorrent-fpm
+    networks:
+      - private0
+    expose:
+      - "9000"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/rutorrent:/home/rutorrent/
+    read_only: true
