@@ -1,7 +1,7 @@
 FROM alpine:3.11
 
 # Dokerfile's infos
-LABEL maintainer="nekoserv" mail="nekoserv@fai.tld
+LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Alpine + OpenVPN client"
 LABEL website="https://github.com/TODO/docker-openvpn-client"
 LABEL version="1.0"
