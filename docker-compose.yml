@@ -312,7 +312,7 @@ services:
 
 
   traefik:
-    image: traefik:2.1
+    image: traefik:2.2
     container_name: traefik
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
