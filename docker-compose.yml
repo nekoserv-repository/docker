@@ -37,7 +37,7 @@ services:
       - ~/docker-data/openvpn-config:/etc/openvpn/conf:ro
     read_only: true
     healthcheck:
-      test: ["CMD", "ping", "-c1", "-W1", "10.10.10.10"]
+      test: ["CMD", "ping", "-c1", "-W1", "10.8.0.1"]
       interval: 1m
       timeout: 2s
       retries: 1

@@ -11,9 +11,12 @@ docker_network_v4=$(ip -o addr show dev eth0 | awk '$3 == "inet" {print $4}')
 docker_network_v6=$(ip -o addr show dev eth0 | awk '$3 == "inet6" {print $4; exit}')
 
 #vpn_port=$(awk '/^remote / {gsub(/[^[0-9]]*/,"");print}' /etc/openvpn/conf/openvpn.conf)
-vpn_port=$(awk '/^remote / {print($3)}' /etc/openvpn/conf/openvpn.conf)
-vpn_proto=$(awk '/^remote / && NF ~ /^[0-9]*$/ {print $NF}' /etc/openvpn/conf/openvpn.conf)
-open_port="52123"
+vpn_port=$(awk '/^remote / {print($3); exit}' /etc/openvpn/conf/openvpn.conf)
+vpn_proto=$(awk '/^remote / && NF ~ /^[0-9]*$/ {print $NF; exit}' /etc/openvpn/conf/openvpn.conf)
+if [ $vpn_port = $vpn_proto ]; then
+  vpn_proto="udp";
+fi
+open_port="32564"
 
 ## INPUT
 #v4
