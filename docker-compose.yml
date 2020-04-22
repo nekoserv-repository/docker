@@ -1,12 +1,6 @@
 # # #
-# to run: docker-compose run
+# dockerized nekoserv's services
 #
-
-## TODO1 : sabnzbd : configure local_ranges
-# in ~/docker-data/sabnzbd/config/sabnzbd.ini
-# to allow 'no access' in /sabnzbd/config/general/
-
-## TODO2 : fix ipv6 (traefik)
 
 version: '3.6'
 
