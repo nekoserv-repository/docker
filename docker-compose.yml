@@ -18,11 +18,14 @@ services:
       - jackett
       - medusa
       - couchpotato
+      #- headphones
       - sabnzbd
       - nzbhydra2
       - flood
       - nginx
       - traefik
+      #- rutorrent
+      #- rutorrent-fpm
 
 
   openvpn-client:
