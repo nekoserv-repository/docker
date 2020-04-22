@@ -1,4 +1,4 @@
-FROM mono:5
+FROM mono:6
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
