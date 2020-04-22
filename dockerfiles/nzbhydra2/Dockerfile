@@ -14,7 +14,7 @@ ARG GID
 RUN addgroup -g $GID nzbhydra2 && \
     adduser -S -u $UID -G nzbhydra2 nzbhydra2 && \
     mkdir /home/nzbhydra2/data/ && \
-    apk add --no-cache curl unzip && \
+    apk add --no-cache curl tzdata unzip && \
     export version=$(curl --silent "https://api.github.com/repos/theotherp/nzbhydra2/releases/latest" \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk '{print(substr($1,2))}') && \
     curl -L https://github.com/theotherp/nzbhydra2/releases/download/v$version/nzbhydra2-$version-linux.zip -o nzbhydra2.zip && \
