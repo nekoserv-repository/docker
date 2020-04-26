@@ -42,7 +42,7 @@ services:
       - "5001"
     dns: 8.8.8.8
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /run
       - /tmp
@@ -79,7 +79,7 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
     network_mode: service:openvpn-client
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -109,7 +109,7 @@ services:
     network_mode: service:openvpn-client
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -130,7 +130,7 @@ services:
       - "8081"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -159,7 +159,7 @@ services:
       - "5050"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -189,7 +189,7 @@ services:
       - "8181"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -219,7 +219,7 @@ services:
       - "8080"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -250,7 +250,7 @@ services:
       - "5076"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp:exec
     volumes:
@@ -279,7 +279,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
       - RTORRENT_SCGI_HOST=rtorrent
       - RTORRENT_SOCK=true
       - FLOOD_SECRET=$ENV_FLOOD_SECRET
@@ -311,7 +311,7 @@ services:
       - "18080"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -337,7 +337,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
       - OVH_ENDPOINT=$ENV_OVH_ENDPOINT
       - OVH_APPLICATION_KEY=$ENV_OVH_APPLICATION_KEY
       - OVH_APPLICATION_SECRET=$ENV_OVH_APPLICATION_SECRET
@@ -367,7 +367,7 @@ services:
       - "18080"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
@@ -393,7 +393,7 @@ services:
       - "9000"
     restart: unless-stopped
     environment:
-      - TZ=Europe/Paris
+      - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
