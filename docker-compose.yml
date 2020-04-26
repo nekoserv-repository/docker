@@ -176,34 +176,34 @@ services:
       - "traefik.http.routers.couchpotato.tls.certresolver=default-ssl"
 
 
-  #headphones:
-  #  build:
-  #    context: dockerfiles/headphones
-  #    args:
-  #      UID: 1000
-  #      GID: 1000
-  #  container_name: headphones
-  #  networks:
-  #    - private0
-  #  expose:
-  #    - "8181"
-  #  restart: unless-stopped
-  #  environment:
-  #    - TZ=Europe/Paris
-  #  tmpfs:
-  #    - /tmp
-  #  volumes:
-  #    - ~/docker-data/headphones/data:/home/headphones/data
-  #    - ~/Downloads/incomplete:/home/incomplete
-  #    - ~/Downloads/postprocessing:/home/postprocessing
-  #    - /mnt/nas/musics:/home/headphones/dl
-  #  read_only: true
-  #  labels:
-  #    - "traefik.enable=true"
-  #    - "traefik.http.routers.headphones.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/headphones`)"
-  #    - "traefik.http.routers.headphones.tls=true"
-  #    - "traefik.http.routers.headphones.middlewares=global-auth@file"
-  #    - "traefik.http.routers.headphones.tls.certresolver=default-ssl"
+  headphones:
+    build:
+      context: dockerfiles/headphones
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: headphones
+    networks:
+      - private0
+    expose:
+      - "8181"
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/headphones/data:/home/headphones/data
+      - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/musics:/home/headphones/dl
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.headphones.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/headphones`)"
+      - "traefik.http.routers.headphones.tls=true"
+      - "traefik.http.routers.headphones.middlewares=global-auth@file"
+      - "traefik.http.routers.headphones.tls.certresolver=default-ssl"
 
 
   sabnzbd:
