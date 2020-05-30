@@ -8,7 +8,7 @@
 #
 
 ## init.
-open_port="32564"
+open_ports="32564 4872"
 config_file="/etc/openvpn/conf/openvpn.conf"
 docker_network_v4=$(ip -o addr show dev eth0 | awk '$3 == "inet" {print $4}')
 docker_network_v6=$(ip -o addr show dev eth0 | awk '$3 == "inet6" {print $4; exit}')
@@ -25,8 +25,10 @@ nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\
 nft add rule ip filter INPUT ct state { established, related } accept
 nft add rule ip filter INPUT iifname "lo" accept
 nft add rule ip filter INPUT ip saddr ${docker_network_v4} accept
-nft add rule ip filter INPUT iifname "tun*" tcp dport ${open_port} accept
-nft add rule ip filter INPUT iifname "tun*" udp dport ${open_port} accept
+for port in $open_ports; do
+  nft add rule ip filter INPUT iifname "tun*" tcp dport ${port} accept
+  nft add rule ip filter INPUT iifname "tun*" udp dport ${port} accept
+done
 #v6
 nft add table ip6 filter
 nft add chain ip6 filter INPUT { type nat hook input priority 0\; policy drop \;}
