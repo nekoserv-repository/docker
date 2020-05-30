@@ -21,7 +21,8 @@ RUN groupadd -g $GID jackett && \
     tar xzf jackett.tar.gz -C /home/jackett && \
     chown -R jackett /home/jackett && \
     rm jackett.tar.gz && \
-    apt autoremove --purge -y curl
+    apt-get autoremove --purge -y curl && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
     
 
 # drop privileges
