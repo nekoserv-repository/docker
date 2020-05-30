@@ -22,7 +22,7 @@ services:
       - sabnzbd
       - nzbhydra2
       - flood
-      - nginx
+      - nginx-static-index
       - traefik
       #- rutorrent
       #- rutorrent-fpm
@@ -298,13 +298,13 @@ services:
       - "traefik.http.routers.flood.tls.certresolver=default-ssl"
 
 
-  nginx:
+  nginx-static-index:
     build:
-      context: dockerfiles/nginx
+      context: dockerfiles/nginx-static-index
       args:
         UID: 1000
         GID: 1000
-    container_name: nginx
+    container_name: nginx-static-index
     networks:
       - private0
     expose:
@@ -315,14 +315,14 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/nginx/static:/home/nginx/static
+      - ~/docker-data/nginx-static-index/static:/home/nginx/static
     read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nginx.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/`)"
-      - "traefik.http.routers.nginx.tls=true"
-      - "traefik.http.routers.nginx.middlewares=global-auth@file"
-      - "traefik.http.routers.nginx.tls.certresolver=default-ssl"
+      - "traefik.http.routers.nginx-static-index.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/`)"
+      - "traefik.http.routers.nginx-static-index.tls=true"
+      - "traefik.http.routers.nginx-static-index.middlewares=global-auth@file"
+      - "traefik.http.routers.nginx-static-index.tls.certresolver=default-ssl"
 
 
   traefik:
