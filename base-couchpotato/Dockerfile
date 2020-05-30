@@ -1,4 +1,4 @@
-FROM python:2-alpine3.11
+FROM python:2-alpine3.12
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
