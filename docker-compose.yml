@@ -22,6 +22,8 @@ services:
       - nzbhydra2
       - flood
       - nginx-static-index
+      - aria2
+      - aria2-webui
       - traefik
 
 
@@ -319,3 +321,58 @@ services:
       - ~/docker-data/traefik/conf:/etc/traefik:ro
       - ~/docker-data/traefik/ssl:/etc/traefik-ssl
     read_only: true
+
+
+  aria2:
+    build:
+      context: dockerfiles/aria2
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: aria2
+    restart: unless-stopped
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/aria2/aria2.conf:/etc/aria2.conf:ro
+      - ~/docker-data/aria2/session:/home/aria2/session
+      - ~/docker-data/aria2/cache-aria2:/home/aria2/.cache/aria2
+      - /mnt/nas/share/aria2:/home/aria2/dl
+    read_only: true
+
+
+  aria2-webui:
+    build:
+      context: dockerfiles/aria2-webui
+      args:
+        UID: 1000
+        GID: 1000
+        ARIA2_CONTAINER_NAME: openvpn-client
+        ARIA2_PORT: 6801
+        ARIA2_TOKEN: $ARG_ARIA2_TOKEN
+    container_name: aria2-webui
+    networks:
+      - private0
+    expose:
+      - "18082"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.aria2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/aria2`)"
+      - "traefik.http.routers.aria2.tls=true"
+      - "traefik.http.middlewares.aria2-stripprefix.stripprefix.prefixes=/aria2"
+      - "traefik.http.routers.aria2.middlewares=aria2-auth-and-prefix"
+      - "traefik.http.middlewares.aria2-auth-and-prefix.chain.middlewares=global-auth@file,aria2-stripprefix@docker"
+      - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
