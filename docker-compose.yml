@@ -63,6 +63,12 @@ services:
       - "traefik.http.routers.jackett.tls.certresolver=default-ssl"
       - "traefik.http.routers.jackett.service=service-jackett"
       - "traefik.http.services.service-jackett.loadbalancer.server.port=9117"
+      - "traefik.http.routers.nzbhydra2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/nzbhydra`)"
+      - "traefik.http.routers.nzbhydra2.tls=true"
+      - "traefik.http.routers.nzbhydra2.middlewares=global-auth@file"
+      - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
+      - "traefik.http.routers.nzbhydra2.service=service-nzbhydra2"
+      - "traefik.http.services.service-nzbhydra2.loadbalancer.server.port=5076"
 
 
   rtorrent:
@@ -245,10 +251,11 @@ services:
         UID: 1000
         GID: 1000
     container_name: nzbhydra2
-    networks:
-      - private0
-    expose:
-      - "5076"
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
@@ -257,12 +264,6 @@ services:
     volumes:
       - ~/docker-data/nzbhydra2/data:/home/nzbhydra2/data
     read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nzbhydra2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/nzbhydra`)"
-      - "traefik.http.routers.nzbhydra2.tls=true"
-      - "traefik.http.routers.nzbhydra2.middlewares=global-auth@file"
-      - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
 
 
   flood:
