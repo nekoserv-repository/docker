@@ -117,6 +117,7 @@ services:
       - ~/Downloads/incomplete:/home/incomplete
     read_only: true
 
+
   medusa:
     build:
       context: dockerfiles/medusa
@@ -134,7 +135,7 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/medusa/data:/home/medusa/data
+      - ~/docker-data/medusa:/home/medusa/data
       - /mnt/nas/SERIES:/home/medusa/dl
       - ~/Downloads/postprocessing:/home/postprocessing
     read_only: true
