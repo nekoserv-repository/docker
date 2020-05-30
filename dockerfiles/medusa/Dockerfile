@@ -13,7 +13,7 @@ ARG GID
 # install stuff, get app & cleanup
 RUN addgroup -g $GID medusa && \
     adduser -S -u $UID -G medusa medusa && \
-    apk add --no-cache curl tzdata unzip && \
+    apk add --no-cache curl mediainfo tzdata unzip && \
     mkdir /home/medusa/data && \
     mkdir /home/postprocessing && \
     mkdir /home/medusa/dl && \
