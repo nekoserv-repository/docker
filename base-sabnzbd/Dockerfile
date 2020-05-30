@@ -4,7 +4,7 @@ FROM python:2-alpine3.12
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Base image for sabnzbd : alpine, python2, par2, etc"
 LABEL website="https://github.com/nekoserv-repository/docker"
-LABEL version="0.2"
+LABEL version="0.3"
 
 # install stuff
 RUN apk add --no-cache automake autoconf make curl g++ libffi-dev musl-dev openssl-dev p7zip tzdata unrar && \
