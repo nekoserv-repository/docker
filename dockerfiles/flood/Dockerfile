@@ -1,4 +1,3 @@
-#FROM alpine:3.11
 FROM node:lts-alpine
 
 # Dokerfile's infos
