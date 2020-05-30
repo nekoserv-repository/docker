@@ -277,8 +277,6 @@ services:
     expose:
       - "3000"
     restart: unless-stopped
-    stdin_open: true
-    tty: true
     environment:
       - TZ=$ENV_TIMEZONE
       - RTORRENT_SCGI_HOST=rtorrent
@@ -289,13 +287,15 @@ services:
     volumes:
       - ~/docker-data/flood/data:/data
     read_only: true
+    stdin_open: true
+    tty: true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flood.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/flood`)"
       - "traefik.http.routers.flood.tls=true"
       - "traefik.http.middlewares.flood-stripprefix.stripprefix.prefixes=/flood"
-      - "traefik.http.routers.flood.middlewares=auth-and-prefix"
-      - "traefik.http.middlewares.auth-and-prefix.chain.middlewares=global-auth@file,flood-stripprefix@docker"
+      - "traefik.http.routers.flood.middlewares=flood-auth-and-prefix"
+      - "traefik.http.middlewares.flood-auth-and-prefix.chain.middlewares=global-auth@file,flood-stripprefix@docker"
       - "traefik.http.routers.flood.tls.certresolver=default-ssl"
 
 
@@ -380,6 +380,7 @@ services:
       - "traefik.http.routers.rutorrent.tls=true"
       - "traefik.http.routers.rutorrent.middlewares=global-auth@file"
       - "traefik.http.routers.rutorrent.tls.certresolver=default-ssl"
+
 
   rutorrent-fpm:
     build:
