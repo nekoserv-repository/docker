@@ -13,18 +13,244 @@ services:
     image: hello-world
     container_name: main-services
     depends_on:
+      - aria2-webui
+      - couchpotato
+      - flood
+      - medusa
+      - nginx-static-index
+      - sabnzbd
+      - traefik
+      - vpn-services
+
+  vpn-services:
+    image: hello-world
+    container_name: vpn-services
+    depends_on:
+      - aria2
+      - jackett
+      - nzbhydra2
       - openvpn-client
       - rtorrent
-      - jackett
-      - medusa
-      - couchpotato
-      - sabnzbd
-      - nzbhydra2
-      - flood
-      - nginx-static-index
-      - aria2
-      - aria2-webui
-      - traefik
+
+
+  aria2:
+    build:
+      context: dockerfiles/aria2
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: aria2
+    restart: unless-stopped
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/aria2/aria2.conf:/etc/aria2.conf:ro
+      - ~/docker-data/aria2/session:/home/aria2/session
+      - ~/docker-data/aria2/cache-aria2:/home/aria2/.cache/aria2
+      - /mnt/nas/share/aria2:/home/aria2/dl
+    read_only: true
+
+
+  aria2-webui:
+    build:
+      context: dockerfiles/aria2-webui
+      args:
+        UID: 1000
+        GID: 1000
+        ARIA2_CONTAINER_NAME: openvpn-client
+        ARIA2_PORT: 6801
+        ARIA2_TOKEN: $ARG_ARIA2_TOKEN
+    container_name: aria2-webui
+    networks:
+      - private0
+    expose:
+      - "18082"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.aria2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/aria2`)"
+      - "traefik.http.routers.aria2.tls=true"
+      - "traefik.http.middlewares.aria2-stripprefix.stripprefix.prefixes=/aria2"
+      - "traefik.http.routers.aria2.middlewares=aria2-auth-and-prefix"
+      - "traefik.http.middlewares.aria2-auth-and-prefix.chain.middlewares=global-auth@file,aria2-stripprefix@docker"
+      - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
+
+
+  couchpotato:
+    build:
+      context: dockerfiles/couchpotato
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: couchpotato
+    networks:
+      - private0
+    expose:
+      - "5050"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/couchpotato/data:/home/couchpotato/data
+      - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/FILMS:/home/couchpotato/dl
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.couchpotato.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/couchpotato`)"
+      - "traefik.http.routers.couchpotato.tls=true"
+      - "traefik.http.routers.couchpotato.middlewares=global-auth@file"
+      - "traefik.http.routers.couchpotato.tls.certresolver=default-ssl"
+
+
+  flood:
+    build:
+      context: dockerfiles/flood
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: flood
+    networks:
+      - private0
+    expose:
+      - "3000"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+      - RTORRENT_SCGI_HOST=rtorrent
+      - RTORRENT_SOCK=true
+      - FLOOD_SECRET=$ENV_FLOOD_SECRET
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/flood/data:/data
+    read_only: true
+    stdin_open: true
+    tty: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flood.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/flood`)"
+      - "traefik.http.routers.flood.tls=true"
+      - "traefik.http.middlewares.flood-stripprefix.stripprefix.prefixes=/flood"
+      - "traefik.http.routers.flood.middlewares=flood-auth-and-prefix"
+      - "traefik.http.middlewares.flood-auth-and-prefix.chain.middlewares=global-auth@file,flood-stripprefix@docker"
+      - "traefik.http.routers.flood.tls.certresolver=default-ssl"
+
+
+  jackett:
+    build:
+      context: dockerfiles/jackett
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: jackett
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/jackett/data:/home/jackett/data
+      - ~/Downloads/incomplete:/home/incomplete
+    read_only: true
+
+
+  medusa:
+    build:
+      context: dockerfiles/medusa
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: medusa
+    networks:
+      - private0
+    expose:
+      - "8081"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/medusa:/home/medusa/data
+      - /mnt/nas/SERIES:/home/medusa/dl
+      - ~/Downloads/postprocessing:/home/postprocessing
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.medusa.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/medusa`)"
+      - "traefik.http.routers.medusa.tls=true"
+      - "traefik.http.routers.medusa.middlewares=global-auth@file"
+      - "traefik.http.routers.medusa.tls.certresolver=default-ssl"
+
+
+  nginx-static-index:
+    build:
+      context: dockerfiles/nginx-static-index
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: nginx-static-index
+    networks:
+      - private0
+    expose:
+      - "18080"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/nginx-static-index/static:/home/nginx/static
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx-static-index.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/`)"
+      - "traefik.http.routers.nginx-static-index.tls=true"
+      - "traefik.http.routers.nginx-static-index.middlewares=global-auth@file"
+      - "traefik.http.routers.nginx-static-index.tls.certresolver=default-ssl"
+
+
+  nzbhydra2:
+    build:
+      context: dockerfiles/nzbhydra2
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: nzbhydra2
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp:exec
+    volumes:
+      - ~/docker-data/nzbhydra2/data:/home/nzbhydra2/data
+    read_only: true
 
 
   openvpn-client:
@@ -100,88 +326,6 @@ services:
     tty: true
 
 
-  jackett:
-    build:
-      context: dockerfiles/jackett
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: jackett
-    depends_on:
-      - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
-    network_mode: service:openvpn-client
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/jackett/data:/home/jackett/data
-      - ~/Downloads/incomplete:/home/incomplete
-    read_only: true
-
-
-  medusa:
-    build:
-      context: dockerfiles/medusa
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: medusa
-    networks:
-      - private0
-    expose:
-      - "8081"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/medusa:/home/medusa/data
-      - /mnt/nas/SERIES:/home/medusa/dl
-      - ~/Downloads/postprocessing:/home/postprocessing
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.medusa.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/medusa`)"
-      - "traefik.http.routers.medusa.tls=true"
-      - "traefik.http.routers.medusa.middlewares=global-auth@file"
-      - "traefik.http.routers.medusa.tls.certresolver=default-ssl"
-
-
-  couchpotato:
-    build:
-      context: dockerfiles/couchpotato
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: couchpotato
-    networks:
-      - private0
-    expose:
-      - "5050"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/couchpotato/data:/home/couchpotato/data
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
-      - /mnt/nas/FILMS:/home/couchpotato/dl
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.couchpotato.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/couchpotato`)"
-      - "traefik.http.routers.couchpotato.tls=true"
-      - "traefik.http.routers.couchpotato.middlewares=global-auth@file"
-      - "traefik.http.routers.couchpotato.tls.certresolver=default-ssl"
-
-
   sabnzbd:
     build:
       context: dockerfiles/sabnzbd
@@ -213,89 +357,6 @@ services:
       - "traefik.http.routers.sabnzbd.tls.certresolver=default-ssl"
 
 
-  nzbhydra2:
-    build:
-      context: dockerfiles/nzbhydra2
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: nzbhydra2
-    depends_on:
-      - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
-    network_mode: service:openvpn-client
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp:exec
-    volumes:
-      - ~/docker-data/nzbhydra2/data:/home/nzbhydra2/data
-    read_only: true
-
-
-  flood:
-    build:
-      context: dockerfiles/flood
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: flood
-    networks:
-      - private0
-    expose:
-      - "3000"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-      - RTORRENT_SCGI_HOST=rtorrent
-      - RTORRENT_SOCK=true
-      - FLOOD_SECRET=$ENV_FLOOD_SECRET
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/flood/data:/data
-    read_only: true
-    stdin_open: true
-    tty: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.flood.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/flood`)"
-      - "traefik.http.routers.flood.tls=true"
-      - "traefik.http.middlewares.flood-stripprefix.stripprefix.prefixes=/flood"
-      - "traefik.http.routers.flood.middlewares=flood-auth-and-prefix"
-      - "traefik.http.middlewares.flood-auth-and-prefix.chain.middlewares=global-auth@file,flood-stripprefix@docker"
-      - "traefik.http.routers.flood.tls.certresolver=default-ssl"
-
-
-  nginx-static-index:
-    build:
-      context: dockerfiles/nginx-static-index
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: nginx-static-index
-    networks:
-      - private0
-    expose:
-      - "18080"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/nginx-static-index/static:/home/nginx/static
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nginx-static-index.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/`)"
-      - "traefik.http.routers.nginx-static-index.tls=true"
-      - "traefik.http.routers.nginx-static-index.middlewares=global-auth@file"
-      - "traefik.http.routers.nginx-static-index.tls.certresolver=default-ssl"
-
-
   traefik:
     image: traefik:2.2
     container_name: traefik
@@ -321,58 +382,3 @@ services:
       - ~/docker-data/traefik/conf:/etc/traefik:ro
       - ~/docker-data/traefik/ssl:/etc/traefik-ssl
     read_only: true
-
-
-  aria2:
-    build:
-      context: dockerfiles/aria2
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: aria2
-    restart: unless-stopped
-    depends_on:
-      - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
-    network_mode: service:openvpn-client
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/aria2/aria2.conf:/etc/aria2.conf:ro
-      - ~/docker-data/aria2/session:/home/aria2/session
-      - ~/docker-data/aria2/cache-aria2:/home/aria2/.cache/aria2
-      - /mnt/nas/share/aria2:/home/aria2/dl
-    read_only: true
-
-
-  aria2-webui:
-    build:
-      context: dockerfiles/aria2-webui
-      args:
-        UID: 1000
-        GID: 1000
-        ARIA2_CONTAINER_NAME: openvpn-client
-        ARIA2_PORT: 6801
-        ARIA2_TOKEN: $ARG_ARIA2_TOKEN
-    container_name: aria2-webui
-    networks:
-      - private0
-    expose:
-      - "18082"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.aria2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/aria2`)"
-      - "traefik.http.routers.aria2.tls=true"
-      - "traefik.http.middlewares.aria2-stripprefix.stripprefix.prefixes=/aria2"
-      - "traefik.http.routers.aria2.middlewares=aria2-auth-and-prefix"
-      - "traefik.http.middlewares.aria2-auth-and-prefix.chain.middlewares=global-auth@file,aria2-stripprefix@docker"
-      - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
