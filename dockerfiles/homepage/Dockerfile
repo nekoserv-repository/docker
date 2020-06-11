@@ -22,7 +22,7 @@ RUN [[ -z "$UID" ]] && UID=$(( $RANDOM % 9000 + 1000 )) || UID=$UID && \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
     curl -L https://github.com/bastienwirtz/homer/releases/download/$version/homer.zip -o homepage.zip && \
     unzip -q homepage.zip -d /home/homepage/www && \
-    [[ ! -z "$OVERRIDE" ]] && sed -i -e 's/title>/title><script defer src="js\/override.js"><\/script>/g' /home/homepage/www/index.html || true && \
+    [[ ! -z "$OVERRIDE" ]] && sed -i -e 's/\/title>/\/title><script defer src="js\/override.js"><\/script>/g' /home/homepage/www/index.html || true && \
     chown -R $UID:$GID /home/homepage && \
     rm homepage.zip && \
     apk del --purge curl unzip
