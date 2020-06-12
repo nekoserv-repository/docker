@@ -369,7 +369,6 @@ services:
     networks:
       - private0
     ports:
-      - "80:80"
       - "443:443"
     environment:
       - TZ=$ENV_TIMEZONE
