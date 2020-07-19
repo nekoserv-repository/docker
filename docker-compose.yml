@@ -51,7 +51,7 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/homepage/config.yml:/home/homepage/www/config.yml:ro
+      - ~/docker-data/homepage/config.yml:/home/homepage/www/assets/config.yml:ro
       - ~/docker-data/homepage/override.js:/home/homepage/www/js/override.js:ro
       - ~/docker-data/homepage/external-resources:/home/homepage/www/assets/external-resources:ro
     read_only: true
