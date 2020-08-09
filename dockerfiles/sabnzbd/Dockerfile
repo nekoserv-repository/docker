@@ -1,10 +1,10 @@
-FROM nekoserv/base-sabnzbd:0.2
+FROM nekoserv/base-sabnzbd:0.3
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Alpine + python2 + sabnzbd"
 LABEL website="https://github.com/TODO/docker-sabnzbd"
-LABEL version="1.0"
+LABEL version="1.1"
 
 # init
 ARG UID
@@ -37,4 +37,4 @@ VOLUME ["/home/postprocessing/"]
 VOLUME ["/home/incomplete/"]
 
 # run!
-ENTRYPOINT ["python", "-OO", "/home/sabnzbd/sabnzbd-release/SABnzbd.py", "--config-file", "/home/sabnzbd/config/"]
+ENTRYPOINT ["python", "/home/sabnzbd/sabnzbd-release/SABnzbd.py", "--logging", "1", "--config-file", "/home/sabnzbd/config/"]

@@ -1,10 +1,10 @@
-FROM python:2-alpine3.11
+FROM python:3.8-alpine
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Base image for sabnzbd : alpine, python2, par2, etc"
+LABEL description="Base image for sabnzbd : alpine, python3, par2, etc"
 LABEL website="https://github.com/nekoserv-repository/docker"
-LABEL version="0.2"
+LABEL version="0.3"
 
 # install stuff
 RUN apk add --no-cache automake autoconf make curl g++ libffi-dev musl-dev openssl-dev p7zip tzdata unrar && \
@@ -19,8 +19,8 @@ RUN apk add --no-cache automake autoconf make curl g++ libffi-dev musl-dev opens
     make check && \
     make install && cd && \
     rm -rf /home/tmp && \
-    pip install cheetah3 cryptography sabyenc && \
-    apk del --purge automake autoconf curl g++ make libffi-dev musl-dev openssl-dev
+    pip install cheetah3 cryptography sabyenc3 'feedparser<6.0.0' configobj cherrypy chardet && \
+    apk del --purge automake autoconf make curl g++ libffi-dev musl-dev openssl-dev
 
 # run!
 CMD ["sh"]
