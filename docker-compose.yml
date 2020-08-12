@@ -56,6 +56,7 @@ services:
       - ~/docker-data/homepage/config.yml:/home/homepage/www/assets/config.yml:ro
       - ~/docker-data/homepage/override.js:/home/homepage/www/js/override.js:ro
       - ~/docker-data/homepage/external-resources:/home/homepage/www/assets/external-resources:ro
+      - ~/docker-data/homepage/icons:/home/homepage/www/assets/icons:ro
     read_only: true
     labels:
       - "traefik.enable=true"

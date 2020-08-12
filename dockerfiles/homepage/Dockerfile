@@ -14,8 +14,8 @@ ARG OVERRIDE
 # install
 RUN [[ -z "$UID" ]] && UID=$(( $RANDOM % 9000 + 1000 )) || UID=$UID && \
     [[ -z "$GID" ]] && GID=$(( $RANDOM % 9000 + 1000 )) || GID=$UID && \
-    addgroup -g $GID hp && \
-    adduser -S -u $UID -G hp hp && \
+    addgroup -g $GID homepage && \
+    adduser -S -u $UID -G homepage homepage && \
     mkdir -p /home/homepage/www/ && \
     apk add --no-cache curl darkhttpd tzdata unzip && \
     export version=$(curl --silent "https://api.github.com/repos/bastienwirtz/homer/releases/latest" \
@@ -29,10 +29,10 @@ RUN [[ -z "$UID" ]] && UID=$(( $RANDOM % 9000 + 1000 )) || UID=$UID && \
     
 
 # drop privileges
-USER hp
+USER homepage
 
 # static volume
-VOLUME ["/home/homepage/www/config.yml"]
+VOLUME ["/home/homepage/www/assets/config.yml"]
 
 # run!
-ENTRYPOINT ["darkhttpd", "/home/homepage/www", "--port", "18083"]
+ENTRYPOINT ["darkhttpd", "/home/homepage/www", "--port", "18083", "--no-listing"]
