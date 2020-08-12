@@ -19,6 +19,7 @@ RUN addgroup -g $GID medusa && \
     mkdir /home/medusa/dl && \
     curl -L https://github.com/pymedusa/Medusa/archive/master.zip -o medusa.zip && \
     unzip -q medusa.zip -d /home/medusa && \
+    mv /home/medusa/Medusa-* /home/medusa/app && \
     chown -R medusa:medusa /home/medusa && \
     chown -R medusa:medusa /home/postprocessing && \
     rm medusa.zip && \
@@ -32,4 +33,4 @@ VOLUME ["/home/medusa/data"]
 VOLUME ["/home/postprocessing"]
 
 # run!
-ENTRYPOINT ["/home/medusa/Medusa-master/SickBeard.py", "--datadir", "/home/medusa/data/"]
+ENTRYPOINT ["/home/medusa/app/SickBeard.py", "--datadir", "/home/medusa/data/"]
