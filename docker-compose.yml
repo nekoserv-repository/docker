@@ -18,6 +18,7 @@ services:
       - aria2-webui
       - flood
       - medusa
+      - lidarr
       - radarr
       - sabnzbd
       - traefik
@@ -119,6 +120,36 @@ services:
       - "traefik.http.routers.aria2.middlewares=aria2-auth-and-prefix"
       - "traefik.http.middlewares.aria2-auth-and-prefix.chain.middlewares=global-auth@file,aria2-stripprefix@docker"
       - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
+
+
+  lidarr:
+    build:
+      context: dockerfiles/lidarr
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: lidarr
+    networks:
+      - private0
+    expose:
+      - "8686"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/lidarr:/home/lidarr/data
+      - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/musics:/home/lidarr/dl
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lidarr.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/lidarr`)"
+      - "traefik.http.routers.lidarr.tls=true"
+      - "traefik.http.routers.lidarr.middlewares=global-auth@file"
+      - "traefik.http.routers.lidarr.tls.certresolver=default-ssl"
 
 
   radarr:
