@@ -17,8 +17,8 @@ services:
       - homepage
       - aria2-webui
       - flood
-      - medusa
       - lidarr
+      - medusa
       - radarr
       - sabnzbd
       - traefik
@@ -122,66 +122,6 @@ services:
       - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
 
 
-  lidarr:
-    build:
-      context: dockerfiles/lidarr
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: lidarr
-    networks:
-      - private0
-    expose:
-      - "8686"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/lidarr:/home/lidarr/data
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
-      - /mnt/nas/musics:/home/lidarr/dl
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.lidarr.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/lidarr`)"
-      - "traefik.http.routers.lidarr.tls=true"
-      - "traefik.http.routers.lidarr.middlewares=global-auth@file"
-      - "traefik.http.routers.lidarr.tls.certresolver=default-ssl"
-
-
-  radarr:
-    build:
-      context: dockerfiles/radarr
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: radarr
-    networks:
-      - private0
-    expose:
-      - "7878"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/radarr:/home/radarr/data
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
-      - /mnt/nas/FILMS:/home/radarr/dl
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/radarr`)"
-      - "traefik.http.routers.radarr.tls=true"
-      - "traefik.http.routers.radarr.middlewares=global-auth@file"
-      - "traefik.http.routers.radarr.tls.certresolver=default-ssl"
-
-
   flood:
     build:
       context: dockerfiles/flood
@@ -237,6 +177,36 @@ services:
       - ~/docker-data/jackett:/home/jackett/data
       - ~/Downloads/incomplete:/home/incomplete
     read_only: true
+
+
+  lidarr:
+    build:
+      context: dockerfiles/lidarr
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: lidarr
+    networks:
+      - private0
+    expose:
+      - "8686"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/lidarr:/home/lidarr/data
+      - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/musics:/home/lidarr/dl
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lidarr.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/lidarr`)"
+      - "traefik.http.routers.lidarr.tls=true"
+      - "traefik.http.routers.lidarr.middlewares=global-auth@file"
+      - "traefik.http.routers.lidarr.tls.certresolver=default-ssl"
 
 
   medusa:
@@ -331,6 +301,36 @@ services:
       - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
       - "traefik.http.routers.nzbhydra2.service=service-nzbhydra2"
       - "traefik.http.services.service-nzbhydra2.loadbalancer.server.port=5076"
+
+
+  radarr:
+    build:
+      context: dockerfiles/radarr
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: radarr
+    networks:
+      - private0
+    expose:
+      - "7878"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/radarr:/home/radarr/data
+      - ~/Downloads/incomplete:/home/incomplete
+      - ~/Downloads/postprocessing:/home/postprocessing
+      - /mnt/nas/FILMS:/home/radarr/dl
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/radarr`)"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.routers.radarr.middlewares=global-auth@file"
+      - "traefik.http.routers.radarr.tls.certresolver=default-ssl"
 
 
   rtorrent:
