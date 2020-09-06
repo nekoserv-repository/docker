@@ -34,6 +34,7 @@ services:
       - nzbhydra2
       - openvpn-client
       - rtorrent
+      - rtorrent-rpc2
 
 
   homepage:
@@ -361,6 +362,25 @@ services:
     read_only: true
     stdin_open: true
     tty: true
+
+
+  rtorrent-rpc2:
+    build:
+      context: dockerfiles/rtorrent-rpc2
+      args:
+        CONTAINER_NAME: openvpn-client
+        RTORRENT_PORT: 5001
+    container_name: rtorrent-rpc2
+    networks:
+      - private0
+    expose:
+      - "18081"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    read_only: true
 
 
   sabnzbd:
