@@ -16,8 +16,8 @@ RUN groupadd -g $GID jackett && \
     useradd -g jackett -u $UID jackett && \
     mkdir -p /home/jackett/data/ && \
     export version=$(curl --silent "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
-      | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk '{print(substr($1,2))}') && \
-    curl -L https://github.com/Jackett/Jackett/releases/download/v$version/Jackett.Binaries.LinuxAMDx64.tar.gz -o jackett.tar.gz && \
+      | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
+    curl -L https://github.com/Jackett/Jackett/releases/download/$version/Jackett.Binaries.LinuxAMDx64.tar.gz -o jackett.tar.gz && \
     tar xzf jackett.tar.gz -C /home/jackett && \
     chown -R jackett /home/jackett && \
     rm jackett.tar.gz && \

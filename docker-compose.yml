@@ -203,7 +203,7 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/jackett/data:/home/jackett/data
+      - ~/docker-data/jackett:/home/jackett/data
       - ~/Downloads/incomplete:/home/incomplete
     read_only: true
 
