@@ -16,9 +16,9 @@ services:
     depends_on:
       - homepage
       - aria2-webui
-      - couchpotato
       - flood
       - medusa
+      - radarr
       - sabnzbd
       - traefik
       - youtube-dl
@@ -121,34 +121,34 @@ services:
       - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
 
 
-  couchpotato:
+  radarr:
     build:
-      context: dockerfiles/couchpotato
+      context: dockerfiles/radarr
       args:
         UID: 1000
         GID: 1000
-    container_name: couchpotato
+    container_name: radarr
     networks:
       - private0
     expose:
-      - "5050"
+      - "7878"
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/couchpotato/data:/home/couchpotato/data
+      - ~/docker-data/radarr:/home/radarr/data
       - ~/Downloads/incomplete:/home/incomplete
       - ~/Downloads/postprocessing:/home/postprocessing
-      - /mnt/nas/FILMS:/home/couchpotato/dl
+      - /mnt/nas/FILMS:/home/radarr/dl
     read_only: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.couchpotato.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/couchpotato`)"
-      - "traefik.http.routers.couchpotato.tls=true"
-      - "traefik.http.routers.couchpotato.middlewares=global-auth@file"
-      - "traefik.http.routers.couchpotato.tls.certresolver=default-ssl"
+      - "traefik.http.routers.radarr.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/radarr`)"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.routers.radarr.middlewares=global-auth@file"
+      - "traefik.http.routers.radarr.tls.certresolver=default-ssl"
 
 
   flood:
