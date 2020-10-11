@@ -137,16 +137,17 @@ services:
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
-      - RTORRENT_SCGI_HOST=rtorrent
-      - RTORRENT_SOCK=true
       - FLOOD_SECRET=$ENV_FLOOD_SECRET
+      - FLOOD_BASE_URI=/flood/
+      - FLOOD_OPTION_noauth=true
+      - FLOOD_OPTION_rthost=$ENV_FLOOD_RT_HOST
+      - FLOOD_OPTION_rtport=$ENV_FLOOD_RT_PORT
     tmpfs:
       - /tmp
     volumes:
       - ~/docker-data/flood/data:/data
+      - ~/Downloads/incomplete:/home/incomplete:ro
     read_only: true
-    stdin_open: true
-    tty: true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flood.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/flood`)"

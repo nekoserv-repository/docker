@@ -1,4 +1,5 @@
-FROM node:lts-alpine
+ARG NODE_IMAGE=node:lts-alpine
+FROM ${NODE_IMAGE} as nodebuild
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
@@ -6,32 +7,43 @@ LABEL description="Flood-UI & custom conf"
 LABEL website="https://github.com/TODO/docker-flood-ui"
 LABEL version="1.0"
 
-# init
+# setup workdir
+WORKDIR /usr/src/app/
+
+# install stuff to build app
+RUN apk add --no-cache curl && \
+    curl -L https://api.github.com/repos/jesec/flood/tarball/master -o flood.tar.gz && \
+    tar xzf flood.tar.gz --strip 1 && \
+    apk del --purge curl && \
+    npm set unsafe-perm true && npm install && \
+    cp config.cli.js config.js && \
+    npm run build && \
+    npm pack --ignore-scripts
+
+# now get the clean image
+FROM ${NODE_IMAGE} as flood
+
+# setup vars
 ARG UID
 ARG GID
 
-# install stuff, get app & cleanup
-RUN sed -i -e "s/^node:x:\([0-9]\+\):\([0-9]\+\)/node:x:2000:2000/g" /etc/passwd && \
+# copy built package
+COPY --from=nodebuild /usr/src/app/flood-*.tgz /tmp/flood.tgz
+
+# install package and runtime dependencies
+RUN apk add --no-cache mediainfo tzdata && \
+    sed -i -e "s/^node:x:\([0-9]\+\):\([0-9]\+\)/node:x:2000:2000/g" /etc/passwd && \
     sed -i -e "s/^node.*/node:x:2000:node/g" /etc/group && \
     addgroup -g $GID flood && \
     adduser -S -u $UID -G flood flood && \
-    apk add --no-cache curl tzdata unzip && \
-    curl -L https://github.com/Flood-UI/flood/archive/master.zip -o flood.zip && \
-    unzip -q flood.zip -d /home/flood && \
-    chown -R flood:flood /home/flood && \
-    rm flood.zip && \
-    cd /home/flood/flood-master/ && \
-    cp config.docker.js config.js && \
-    sed -i -e "s/^  baseURI: .*/  baseURI: '\/flood\/',/g" config.js && \
-    npm install && npm cache clean --force && \
-    npm run build && \
-    apk del --purge curl unzip
+    chown flood:flood /tmp/flood.tgz
 
 # drop privileges
 USER flood
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/flood/flood-master/data/"]
+RUN npm config set prefix '/home/flood' && \
+    npm install -g /tmp/flood.tgz && \
+    rm /tmp/flood.tgz
 
 # run!
-CMD [ "npm", "start", "--prefix", "/home/flood/flood-master" ]
+ENTRYPOINT ["/home/flood/bin/flood", "--host=0.0.0.0", "--rundir=/data"]
