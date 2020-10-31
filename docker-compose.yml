@@ -137,8 +137,8 @@ services:
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
-      - FLOOD_SECRET=$ENV_FLOOD_SECRET
-      - FLOOD_BASE_URI=/flood/
+      - FLOOD_OPTION_secret=$ENV_FLOOD_SECRET
+      - FLOOD_OPTION_baseuri=/flood/
       - FLOOD_OPTION_noauth=true
       - FLOOD_OPTION_rthost=$ENV_FLOOD_RT_HOST
       - FLOOD_OPTION_rtport=$ENV_FLOOD_RT_PORT
@@ -152,9 +152,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.flood.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/flood`)"
       - "traefik.http.routers.flood.tls=true"
-      - "traefik.http.middlewares.flood-stripprefix.stripprefix.prefixes=/flood"
-      - "traefik.http.routers.flood.middlewares=flood-auth-and-prefix"
-      - "traefik.http.middlewares.flood-auth-and-prefix.chain.middlewares=global-auth@file,flood-stripprefix@docker"
+      - "traefik.http.routers.flood.middlewares=global-auth@file"
       - "traefik.http.routers.flood.tls.certresolver=default-ssl"
 
 
