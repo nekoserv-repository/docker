@@ -146,7 +146,7 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/flood/data:/data
-      - ~/Downloads/incomplete:/home/incomplete:ro
+      - ~/docker-data/dl/incomplete/torrent:/home/incomplete:ro
     read_only: true
     labels:
       - "traefik.enable=true"
@@ -175,7 +175,6 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/jackett:/home/jackett/data
-      - ~/Downloads/incomplete:/home/incomplete
     read_only: true
 
 
@@ -197,8 +196,7 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/lidarr:/home/lidarr/data
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
+      - ~/docker-data/dl/postprocessing/music:/home/postprocessing/music
       - /mnt/nas/musics:/home/lidarr/dl
     read_only: true
     labels:
@@ -227,8 +225,8 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/medusa:/home/medusa/data
+      - ~/docker-data/dl/postprocessing/tv:/home/postprocessing/tv
       - /mnt/nas/SERIES:/home/medusa/dl
-      - ~/Downloads/postprocessing:/home/postprocessing
     read_only: true
     labels:
       - "traefik.enable=true"
@@ -321,8 +319,7 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/radarr:/home/radarr/data
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
+      - ~/docker-data/dl/postprocessing/movies:/home/postprocessing/movies
       - /mnt/nas/FILMS:/home/radarr/dl
     read_only: true
     labels:
@@ -352,12 +349,11 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/rtorrent/config:/home/rtorrent
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
       - ~/docker-data/rtorrent/session:/home/rtorrent/session
-      - ~/docker-data/rtorrent/watch:/home/rtorrent/watch
       - ~/docker-data/nzbToMedia:/home/rtorrent/nzbToMedia
       - /mnt/nas/share:/home/rtorrent/share
+      - ~/docker-data/dl/incomplete/torrent:/home/incomplete
+      - ~/docker-data/dl/postprocessing:/home/postprocessing
     read_only: true
     stdin_open: true
     tty: true
@@ -400,10 +396,10 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/sabnzbd/config:/home/sabnzbd/config
-      - ~/Downloads/incomplete:/home/incomplete
-      - ~/Downloads/postprocessing:/home/postprocessing
-      - /mnt/nas/share:/home/sabnzbd/complete
       - ~/docker-data/nzbToMedia:/home/sabnzbd/nzbToMedia
+      - /mnt/nas/share:/home/sabnzbd/complete
+      - ~/docker-data/dl/incomplete/nzb:/home/incomplete
+      - ~/docker-data/dl/postprocessing:/home/postprocessing
     read_only: true
     labels:
       - "traefik.enable=true"
