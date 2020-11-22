@@ -12,7 +12,9 @@ WORKDIR /usr/src/app/
 
 # install stuff to build app
 RUN apk add --no-cache curl && \
-    curl -L https://api.github.com/repos/jesec/flood/tarball/master -o flood.tar.gz && \
+    export version=$(curl --silent "https://api.github.com/repos/jesec/flood/releases" \
+      |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
+    curl -L https://github.com/jesec/flood/archive/v$version.tar.gz -o flood.tar.gz && \
     tar xzf flood.tar.gz --strip 1 && \
     apk del --purge curl && \
     npm set unsafe-perm true && npm install && \
