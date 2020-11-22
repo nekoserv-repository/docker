@@ -13,17 +13,15 @@ ARG GID
 # install stuff, get app & cleanup
 RUN addgroup -g $GID medusa && \
     adduser -S -u $UID -G medusa medusa && \
-    apk add --no-cache curl mediainfo tzdata unzip && \
-    mkdir /home/medusa/data && \
-    mkdir /home/postprocessing && \
-    mkdir /home/medusa/dl && \
-    curl -L https://github.com/pymedusa/Medusa/archive/master.zip -o medusa.zip && \
-    unzip -q medusa.zip -d /home/medusa && \
+    apk add --no-cache curl mediainfo tzdata && \
+    export version=$(curl --silent "https://api.github.com/repos/pymedusa/medusa/releases" \
+      |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
+    curl -L https://github.com/pymedusa/Medusa/archive/v$version.tar.gz -o medusa.tar.gz && \
+    tar xzf medusa.tar.gz -C /home/medusa && \
     mv /home/medusa/Medusa-* /home/medusa/app && \
     chown -R medusa:medusa /home/medusa && \
-    chown -R medusa:medusa /home/postprocessing && \
-    rm medusa.zip && \
-    apk del --purge curl unzip
+    rm medusa.tar.gz && \
+    apk del --purge curl
 
 # drop privileges
 USER medusa
