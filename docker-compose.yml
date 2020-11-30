@@ -19,6 +19,7 @@ services:
       - flood
       - lidarr
       - medusa
+      - pyload
       - radarr
       - sabnzbd
       - traefik
@@ -299,6 +300,36 @@ services:
       - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
       - "traefik.http.routers.nzbhydra2.service=service-nzbhydra2"
       - "traefik.http.services.service-nzbhydra2.loadbalancer.server.port=5076"
+
+
+  pyload:
+    build:
+      context: dockerfiles/pyload
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: pyload
+    networks:
+      - dummy0
+    expose:
+      - "8000"
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/pyload:/home/pyload/.pyload
+      - ~/docker-data/dl/incomplete/pyload:/home/pyload/dl
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pyload.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/pyload`)"
+      - "traefik.http.routers.pyload.tls=true"
+      - "traefik.http.routers.pyload.middlewares=global-auth@file"
+      - "traefik.http.routers.pyload.tls.certresolver=default-ssl"
 
 
   radarr:
