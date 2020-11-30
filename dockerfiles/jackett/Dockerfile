@@ -1,4 +1,4 @@
-FROM mono:6
+FROM debian:10-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
@@ -12,9 +12,11 @@ ARG GID
 ENV XDG_CONFIG_HOME="/home/jackett/data"
 
 # add group/user, then get app & cleanup
-RUN groupadd -g $GID jackett && \
-    useradd -g jackett -u $UID jackett && \
+RUN groupadd -g $UID jackett && \
+    useradd -g jackett -u $GID jackett && \
     mkdir -p /home/jackett/data/ && \
+    echo "deb http://deb.debian.org/debian buster main" > /etc/apt/source.list && \
+    apt-get update && apt-get install --no-install-recommends -y ca-certificates curl libicu63 && \
     export version=$(curl --silent "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
     curl -L https://github.com/Jackett/Jackett/releases/download/$version/Jackett.Binaries.LinuxAMDx64.tar.gz -o jackett.tar.gz && \
@@ -23,7 +25,6 @@ RUN groupadd -g $GID jackett && \
     rm jackett.tar.gz && \
     apt-get autoremove --purge -y curl && \
     rm -rf /var/lib/apt/lists/* /tmp/*
-    
 
 # drop privileges
 USER jackett
