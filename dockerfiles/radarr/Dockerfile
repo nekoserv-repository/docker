@@ -1,4 +1,4 @@
-FROM mono:6
+FROM alpine:3.12
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
@@ -12,18 +12,17 @@ ARG GID
 ENV XDG_CONFIG_HOME="/home/radarr/data"
 
 # add group/user, then get app & cleanup
-RUN groupadd -g $GID radarr && \
-    useradd -g radarr -u $UID radarr && \
+RUN addgroup -g $GID radarr && \
+    adduser -S -u $UID -G radarr radarr && \
+    apk add --no-cache curl mediainfo tzdata icu-libs libintl sqlite-libs && \
     mkdir -p /home/radarr/data/ && \
     export version=$(curl --silent "https://api.github.com/repos/Radarr/Radarr/releases" \
       |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
-    curl -L https://github.com/Radarr/Radarr/releases/download/v$version/Radarr.develop.$version.linux.tar.gz -o radarr.tar.gz && \
+    curl -L https://github.com/Radarr/Radarr/releases/download/v$version/Radarr.master.$version.linux-musl-core-x64.tar.gz -o radarr.tar.gz && \
     tar xzf radarr.tar.gz -C /home/radarr && \
     chown -R radarr /home/radarr && \
     rm radarr.tar.gz && \
-    apt-get autoremove --purge -y curl && \
-    apt-get update && apt-get install --no-install-recommends -y mediainfo && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
+    apk del --purge curl
 
 # drop privileges
 USER radarr
@@ -32,4 +31,4 @@ USER radarr
 VOLUME ["/home/radarr/data/"]
 
 # run!
-CMD ["/usr/bin/mono", "/home/radarr/Radarr/Radarr.exe", "-nobrowser"]
+CMD ["/home/radarr/Radarr/Radarr", "-nobrowser"]
