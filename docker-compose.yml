@@ -146,7 +146,7 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/flood/data:/data
+      - ~/docker-data/flood:/home/flood/data
       - ~/docker-data/dl/incomplete/torrent:/home/incomplete:ro
     read_only: true
     labels:
