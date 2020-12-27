@@ -428,7 +428,7 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/sabnzbd/config:/home/sabnzbd/config
+      - ~/docker-data/sabnzbd:/home/sabnzbd/config
       - ~/docker-data/nzbToMedia:/home/sabnzbd/nzbToMedia
       - /mnt/nas/share:/home/sabnzbd/complete
       - ~/docker-data/dl/incomplete/nzb:/home/incomplete
