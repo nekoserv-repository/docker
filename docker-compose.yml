@@ -90,7 +90,9 @@ services:
       - ~/docker-data/aria2/aria2.conf:/etc/aria2.conf:ro
       - ~/docker-data/aria2/session:/home/aria2/session
       - ~/docker-data/aria2/cache-aria2:/home/aria2/.cache/aria2
-      - /mnt/nas/share/aria2:/home/aria2/dl
+      - ~/docker-data/aria2/dl:/home/aria2/dl
+      - /mnt/nas/share/aria2:/home/aria2/complete
+      - ~/docker-data/aria2/scripts:/home/aria2/scripts
     read_only: true
 
 
