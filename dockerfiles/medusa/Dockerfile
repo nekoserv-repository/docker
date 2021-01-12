@@ -14,7 +14,7 @@ ARG GID
 RUN addgroup -g $GID medusa && \
     adduser -S -u $UID -G medusa medusa && \
     apk add --no-cache curl mediainfo tzdata && \
-    export version=$(curl --silent "https://api.github.com/repos/pymedusa/medusa/releases" \
+    export version=$(curl --silent "https://api.github.com/repos/pymedusa/medusa/releases/latest" \
       |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
     curl -L https://github.com/pymedusa/Medusa/archive/v$version.tar.gz -o medusa.tar.gz && \
     tar xzf medusa.tar.gz -C /home/medusa && \
