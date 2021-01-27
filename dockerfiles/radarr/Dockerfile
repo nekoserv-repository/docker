@@ -2,7 +2,7 @@ FROM alpine:3.12
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Alpine + mono + radarr"
+LABEL description="Alpine + radarr"
 LABEL website="https://github.com/TODO/docker-radarr"
 LABEL version="1.0"
 

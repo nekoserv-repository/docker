@@ -2,7 +2,7 @@ FROM debian:10-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Debian + Flood-UI"
+LABEL description="Debian slim + Flood-UI"
 LABEL website="https://github.com/TODO/docker-flood-ui"
 LABEL version="1.0"
 
