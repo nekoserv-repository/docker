@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.13
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
