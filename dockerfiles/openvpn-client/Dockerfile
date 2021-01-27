@@ -10,11 +10,7 @@ LABEL version="1.0"
 COPY docker-entrypoint.sh /usr/local/bin/
 
 # openvpn install & clean [ TODO : add gosu! ]
-RUN apk add --no-cache \
-     nftables \
-     openvpn \
-     tini \
-     tzdata && \
+RUN apk add --no-cache nftables openvpn tini tzdata && \
     chmod u+x /usr/local/bin/docker-entrypoint.sh
 
 # mount config file

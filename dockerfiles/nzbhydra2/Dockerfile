@@ -2,7 +2,7 @@ FROM adoptopenjdk/openjdk15-openj9:alpine-jre
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Alpine + openjdk15 + NZBHydra2"
+LABEL description="Alpine + jre15 + NZBHydra2"
 LABEL website="https://github.com/TODO/docker-nzbhydra2"
 LABEL version="1.0"
 

@@ -2,7 +2,7 @@ FROM debian:10-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Alpine + mono + jackett"
+LABEL description="Debian slim + jackett"
 LABEL website="https://github.com/TODO/docker-jackett"
 LABEL version="1.0"
 
