@@ -273,7 +273,6 @@ services:
       - private0
     expose:
       - "5001"
-    dns: 8.8.8.8
     environment:
       - TZ=$ENV_TIMEZONE
     tmpfs:
