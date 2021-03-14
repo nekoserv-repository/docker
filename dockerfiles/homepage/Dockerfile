@@ -9,7 +9,7 @@ LABEL version="1.0"
 # init
 ARG UID
 ARG GID
-ARG OVERRIDE
+ARG CUSTOM_JS
 
 # copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -25,7 +25,10 @@ RUN [[ -z "$UID" ]] && UID=$(( $RANDOM % 9000 + 1000 )) || UID=$UID && \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
     curl -L https://github.com/bastienwirtz/homer/releases/download/$version/homer.zip -o homepage.zip && \
     unzip -q homepage.zip -d /home/homepage/www && \
-    [[ ! -z "$OVERRIDE" ]] && sed -i -e 's/\/title>/\/title><script defer src="js\/override.js"><\/script>/g' /home/homepage/www/index.html || true && \
+    [[ ! -z "$CUSTOM_JS" ]] && sed -i -e 's/<\/head>/<link href="js\/custom.js" rel="preload" as="script"><\/head>/g' \
+        -e 's/<\/body>/<script src="js\/custom.js"><\/script><\/body>/g' \
+        /home/homepage/www/index.html \
+        || true && \
     chown -R $UID:$GID /home/homepage && \
     rm homepage.zip && \
     apk del --purge curl unzip
