@@ -44,7 +44,7 @@ services:
       args:
         UID: 1000
         GID: 1000
-        OVERRIDE: 1
+        CUSTOM_JS: 1
     container_name: homepage
     networks:
       - private0
@@ -57,7 +57,7 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/homepage/config.yml:/home/homepage/www/assets/config.yml:ro
-      - ~/docker-data/homepage/override.js:/home/homepage/www/js/override.js:ro
+      - ~/docker-data/homepage/custom.js:/home/homepage/www/js/custom.js:ro
       - ~/docker-data/homepage/external-resources:/home/homepage/www/assets/external-resources:ro
       - ~/docker-data/homepage/icons:/home/homepage/www/assets/icons:ro
     read_only: true
