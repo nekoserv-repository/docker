@@ -1,26 +1,17 @@
-FROM python:3.8-alpine
+FROM python:3.8-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Base image for sabnzbd : alpine, python3, par2, etc"
+LABEL description="Base image for sabnzbd : debian, python3, par2, etc"
 LABEL website="https://github.com/nekoserv-repository/docker"
-LABEL version="0.3"
+LABEL version="0.4"
 
 # install stuff
-RUN apk add --no-cache automake autoconf make curl g++ libffi-dev musl-dev openssl-dev p7zip tzdata unrar && \
-    mkdir /home/tmp && cd /home/tmp && \
-    curl -L $(curl --silent "https://api.github.com/repos/Parchive/par2cmdline/releases/latest" \
-      | grep '"tarball_url":' | sed -E 's/.*"([^"]+)".*/\1/') -o par2cmdline.tar.gz && \
-    tar xzf par2cmdline.tar.gz && rm par2cmdline.tar.gz && \
-    cd Parchive-par2cmdline-* && \
-    ./automake.sh && \
-    ./configure && \
-    make && \
-    make check && \
-    make install && cd && \
-    rm -rf /home/tmp && \
+RUN sed -i -e '/^deb / s/$/ non-free/' /etc/apt/sources.list && \
+    apt-get update && apt-get install --no-install-recommends -y curl p7zip-full par2 unrar unzip && \
     pip install cheetah3 cryptography sabyenc3 'feedparser<6.0.0' configobj cherrypy chardet && \
-    apk del --purge automake autoconf make curl g++ libffi-dev musl-dev openssl-dev
+    apt-get autoremove --purge -y curl && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 # run!
 CMD ["sh"]
