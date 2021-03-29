@@ -132,7 +132,6 @@ services:
       args:
         UID: 1000
         GID: 1000
-    command: ["--baseuri", "/flood/"]
     container_name: flood
     networks:
       - private0
@@ -141,6 +140,9 @@ services:
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
+      - FLOOD_OPTION_baseuri=/flood/
+      - FLOOD_OPTION_host=0.0.0.0
+      - FLOOD_OPTION_rundir=/home/flood/data/
       - FLOOD_OPTION_secret=$ENV_FLOOD_SECRET
       - FLOOD_OPTION_noauth=true
       - FLOOD_OPTION_rthost=$ENV_FLOOD_RT_HOST

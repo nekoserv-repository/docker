@@ -26,4 +26,4 @@ RUN addgroup -g $GID flood && \
 USER flood
 
 # run!
-ENTRYPOINT ["/home/flood/flood-linux", "--host=0.0.0.0", "--rundir=/home/flood/data"]
+ENTRYPOINT ["/home/flood/flood-linux"]
