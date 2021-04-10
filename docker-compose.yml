@@ -23,7 +23,6 @@ services:
       - radarr
       - sabnzbd
       - traefik
-      - youtube-dl
       - vpn-services
 
   vpn-services:
@@ -469,29 +468,3 @@ services:
       - ~/docker-data/traefik/ssl:/etc/traefik-ssl
     read_only: true
 
-
-  youtube-dl:
-    build:
-      context: dockerfiles/youtube-dl
-      args:
-        UID: 1000
-        GID: 1000
-    container_name: youtube-dl
-    networks:
-      - dummy0
-    expose:
-      - "8080"
-    restart: unless-stopped
-    environment:
-      - TZ=$ENV_TIMEZONE
-    tmpfs:
-      - /tmp
-    volumes:
-      - ~/docker-data/youtube-dl:/youtube-dl
-    read_only: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ytdl.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/youtube-dl`)"
-      - "traefik.http.routers.ytdl.tls=true"
-      - "traefik.http.routers.ytdl.middlewares=global-auth@file"
-      - "traefik.http.routers.ytdl.tls.certresolver=default-ssl"
