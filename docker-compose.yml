@@ -23,6 +23,7 @@ services:
       - radarr
       - sabnzbd
       - traefik
+      - trilium
       - vpn-services
 
   vpn-services:
@@ -468,3 +469,31 @@ services:
       - ~/docker-data/traefik/ssl:/etc/traefik-ssl
     read_only: true
 
+
+  trilium:
+    image: zadam/trilium
+    container_name: trilium
+    networks:
+      - dummy0
+    expose:
+      - "32698"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+      - TRILIUM_DATA_DIR=/data
+      - TRILIUM_PORT=32698
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/trilium:/data
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.trilium.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/trilium`)"
+      - "traefik.http.routers.trilium.tls=true"
+      - "traefik.http.middlewares.trilium-stripprefix.stripprefix.prefixes=/trilium"
+      - "traefik.http.routers.trilium.middlewares=trilium-auth-and-prefix"
+      - "traefik.http.middlewares.trilium-auth-and-prefix.chain.middlewares=global-auth@file,trilium-stripprefix@docker"
+      - "traefik.http.routers.trilium.tls.certresolver=default-ssl"
+      - "traefik.http.routers.trilium.service=service-trilium"
+      - "traefik.http.services.service-trilium.loadbalancer.server.port=32698"
