@@ -18,7 +18,7 @@ RUN addgroup -g $GID lidarr && \
     mkdir -p /home/lidarr/data/ && \
     export version=$(curl --silent "https://api.github.com/repos/lidarr/Lidarr/releases" \
       |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
-    curl -L https://github.com/lidarr/Lidarr/releases/download/v$version/lidarr.develop.$version.linux-musl-core-x64.tar.gz -o lidarr.tar.gz && \
+    curl -L https://github.com/lidarr/Lidarr/releases/download/v$version/Lidarr.master.$version.linux-musl-core-x64.tar.gz -o lidarr.tar.gz && \
     tar xzf lidarr.tar.gz -C /home/lidarr && \
     chown -R lidarr /home/lidarr && \
     rm lidarr.tar.gz && \
