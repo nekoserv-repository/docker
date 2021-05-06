@@ -19,6 +19,7 @@ services:
       - flood
       - lidarr
       - medusa
+      - metube
       - pyload
       - radarr
       - sabnzbd
@@ -239,6 +240,34 @@ services:
       - "traefik.http.routers.medusa.tls=true"
       - "traefik.http.routers.medusa.middlewares=global-auth@file"
       - "traefik.http.routers.medusa.tls.certresolver=default-ssl"
+
+
+  metube:
+    build:
+      context: dockerfiles/metube
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: metube
+    networks:
+      - dummy0
+    expose:
+      - "8081"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+      - URL_PREFIX=/metube/
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/docker-data/dl/incomplete/metube:/downloads
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.metube.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/metube`)"
+      - "traefik.http.routers.metube.tls=true"
+      - "traefik.http.routers.metube.middlewares=global-auth@file"
+      - "traefik.http.routers.metube.tls.certresolver=default-ssl"
 
 
   nzbhydra2:
