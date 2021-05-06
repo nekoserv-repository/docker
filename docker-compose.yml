@@ -417,6 +417,7 @@ services:
       - /mnt/nas/share:/home/rtorrent/share
       - ~/docker-data/dl/incomplete/torrent:/home/incomplete
       - ~/docker-data/dl/postprocessing:/home/postprocessing
+      - ~/docker-data/flood/temp:/home/flood/data/temp:ro
     read_only: true
     stdin_open: true
     tty: true
