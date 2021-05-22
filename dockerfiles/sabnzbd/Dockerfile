@@ -2,7 +2,7 @@ FROM nekoserv/base-sabnzbd:0.4
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Debian + python2 + sabnzbd"
+LABEL description="Debian + python3 + sabnzbd"
 LABEL website="https://github.com/TODO/docker-sabnzbd"
 LABEL version="1.2"
 

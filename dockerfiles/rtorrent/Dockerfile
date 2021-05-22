@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Alpine + python2 + rTorrent"
+LABEL description="Alpine + python3 + rTorrent"
 LABEL website="https://github.com/TODO/docker-rtorrent"
 LABEL version="1.0"
 
