@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
-LABEL description="Alpine + python2 + medusa"
+LABEL description="Alpine + python3 + medusa"
 LABEL website="https://github.com/TODO/docker-medusa"
 LABEL version="1.0"
 
