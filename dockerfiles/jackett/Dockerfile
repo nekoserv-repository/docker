@@ -12,9 +12,9 @@ ARG GID
 ENV XDG_CONFIG_HOME="/home/jackett/data"
 
 # add group/user, then get app & cleanup
-RUN groupadd -g $UID jackett && \
-    useradd -g jackett -u $GID jackett && \
-    mkdir -p /home/jackett/data/ && \
+RUN groupadd -g $GID jackett && \
+    useradd -m -g jackett -u $UID jackett && \
+    mkdir /home/jackett/data/ && \
     echo "deb http://deb.debian.org/debian buster main" > /etc/apt/source.list && \
     apt-get update && apt-get install --no-install-recommends -y ca-certificates curl libicu63 && \
     export version=$(curl --silent "https://api.github.com/repos/Jackett/Jackett/releases/latest" \

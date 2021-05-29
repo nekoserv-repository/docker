@@ -57,10 +57,10 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/homepage/config.yml:/home/homepage/www/assets/config.yml:ro
-      - ~/docker-data/homepage/custom.js:/home/homepage/www/js/custom.js:ro
-      - ~/docker-data/homepage/external-resources:/home/homepage/www/assets/external-resources:ro
-      - ~/docker-data/homepage/icons:/home/homepage/www/assets/icons:ro
+      - ~/docker-data/homepage/config.yml:/home/homepage/assets/config.yml:ro
+      - ~/docker-data/homepage/custom.js:/home/homepage/js/custom.js:ro
+      - ~/docker-data/homepage/external-resources:/home/homepage/assets/external-resources:ro
+      - ~/docker-data/homepage/icons:/home/homepage/assets/icons:ro
     read_only: true
     labels:
       - "traefik.enable=true"
@@ -101,8 +101,6 @@ services:
     build:
       context: dockerfiles/aria2-webui
       args:
-        UID: 1000
-        GID: 1000
         ARIA2_CONTAINER_NAME: openvpn-client
         ARIA2_PORT: 6801
         ARIA2_TOKEN: $ARG_ARIA2_TOKEN
@@ -353,7 +351,8 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/pyload:/home/pyload/.pyload
+      - ~/docker-data/pyload/conf:/home/pyload/.pyload
+      - ~/docker-data/pyload/plugins:/home/pyload/module/plugins
       - ~/docker-data/dl/incomplete/pyload:/home/pyload/dl
     read_only: true
     labels:
