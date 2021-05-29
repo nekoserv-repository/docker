@@ -16,9 +16,8 @@ RUN addgroup -g $GID flood && \
     apk add --no-cache curl mediainfo tzdata && \
     export version=$(curl --silent "https://api.github.com/repos/jesec/flood/releases/latest" \
       |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
-    curl -L https://github.com/jesec/flood/releases/download/v$version/flood-linux-x64 -o flood-linux && \
-    mv flood-linux /home/flood/ && \
-    chown -R flood:flood /home/flood && \
+    curl -L https://github.com/jesec/flood/releases/download/v$version/flood-linux-x64 -o /home/flood/flood-linux && \
+    chown flood:flood /home/flood/flood-linux && \
     chmod 0700 /home/flood/flood-linux && \
     apk del --purge curl
 
