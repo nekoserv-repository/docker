@@ -1,4 +1,4 @@
-FROM nekoserv/base-sabnzbd:0.4
+FROM nekoserv/base-sabnzbd:0.5
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
