@@ -21,6 +21,7 @@ fi
 
 ## INPUT
 #v4
+nft add table ip filter
 nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }
 nft add rule ip filter INPUT ct state { established, related } accept
 nft add rule ip filter INPUT iifname "lo" accept
