@@ -5,8 +5,9 @@
 version: '3.6'
 
 networks:
-  private0:
-  dummy0:
+  dummy:
+  private:
+
 
 services:
 
@@ -48,7 +49,7 @@ services:
         CUSTOM_JS: 1
     container_name: homepage
     networks:
-      - private0
+      - private
     expose:
       - "18083"
     restart: unless-stopped
@@ -106,7 +107,7 @@ services:
         ARIA2_TOKEN: $ARG_ARIA2_TOKEN
     container_name: aria2-webui
     networks:
-      - private0
+      - private
     expose:
       - "18082"
     restart: unless-stopped
@@ -133,7 +134,7 @@ services:
         GID: 1000
     container_name: flood
     networks:
-      - private0
+      - private
     expose:
       - "3000"
     restart: unless-stopped
@@ -190,7 +191,7 @@ services:
         GID: 1000
     container_name: lidarr
     networks:
-      - private0
+      - private
     expose:
       - "8686"
     restart: unless-stopped
@@ -219,7 +220,7 @@ services:
         GID: 1000
     container_name: medusa
     networks:
-      - private0
+      - private
     expose:
       - "8081"
     restart: unless-stopped
@@ -248,7 +249,7 @@ services:
         GID: 1000
     container_name: metube
     networks:
-      - dummy0
+      - dummy
     expose:
       - "8081"
     restart: unless-stopped
@@ -299,7 +300,7 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
     restart: unless-stopped
     networks:
-      - private0
+      - private
     expose:
       - "5001"
     environment:
@@ -340,7 +341,7 @@ services:
         GID: 1000
     container_name: pyload
     networks:
-      - dummy0
+      - dummy
     expose:
       - "8000"
     restart: unless-stopped
@@ -371,7 +372,7 @@ services:
         GID: 1000
     container_name: radarr
     networks:
-      - private0
+      - private
     expose:
       - "7878"
     restart: unless-stopped
@@ -430,7 +431,7 @@ services:
         RTORRENT_PORT: 5001
     container_name: rtorrent-rpc2
     networks:
-      - private0
+      - private
     expose:
       - "18081"
     restart: unless-stopped
@@ -449,7 +450,7 @@ services:
         GID: 1000
     container_name: sabnzbd
     networks:
-      - private0
+      - private
     expose:
       - "8080"
     restart: unless-stopped
@@ -479,8 +480,8 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
     restart: unless-stopped
     networks:
-      - private0
-      - dummy0
+      - private
+      - dummy
     ports:
       - "443:443"
     environment:
@@ -510,7 +511,7 @@ services:
     image: zadam/trilium
     container_name: trilium
     networks:
-      - dummy0
+      - dummy
     expose:
       - "32698"
     restart: unless-stopped
