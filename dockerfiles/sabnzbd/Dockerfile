@@ -1,10 +1,10 @@
-FROM nekoserv/base-sabnzbd:0.5
+FROM python:3.9-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
 LABEL description="Debian + python3 + sabnzbd"
 LABEL website="https://github.com/TODO/docker-sabnzbd"
-LABEL version="1.2"
+LABEL version="1.3"
 
 # init
 ARG UID
@@ -18,7 +18,10 @@ RUN groupadd -g $GID sabnzbd && \
     mkdir /home/sabnzbd/complete && \
     mkdir /home/postprocessing && \
     mkdir /home/incomplete && \
-    apt-get update && apt-get install --no-install-recommends -y curl && \
+    sed -i -e '/^deb / s/$/ non-free/' /etc/apt/sources.list && \
+    apt-get update && apt-get install --no-install-recommends -y curl p7zip-full par2 unrar unzip && \
+    curl https://raw.githubusercontent.com/sabnzbd/sabnzbd/master/requirements.txt -o requirements.txt && \
+    pip install -r requirements.txt && rm requirements.txt && \
     curl -L $(curl --silent "https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest" \
       | grep '"tarball_url":' | sed -E 's/.*"([^"]+)".*/\1/') -o sabnzbd.tar.gz && \
     tar xzf sabnzbd.tar.gz --strip 1 -C /home/sabnzbd/sabnzbd-release/ && \
