@@ -530,12 +530,12 @@ services:
     networks:
       - dummy
     expose:
-      - "32698"
+      - "8080"
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
       - TRILIUM_DATA_DIR=/data
-      - TRILIUM_PORT=32698
+      - TRILIUM_PORT=8080
     tmpfs:
       - /tmp
     volumes:
@@ -550,4 +550,4 @@ services:
       - "traefik.http.middlewares.trilium-auth-and-prefix.chain.middlewares=global-auth@file,trilium-stripprefix@docker"
       - "traefik.http.routers.trilium.tls.certresolver=default-ssl"
       - "traefik.http.routers.trilium.service=service-trilium"
-      - "traefik.http.services.service-trilium.loadbalancer.server.port=32698"
+      - "traefik.http.services.service-trilium.loadbalancer.server.port=8080"
