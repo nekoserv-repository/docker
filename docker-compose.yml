@@ -23,6 +23,7 @@ services:
       - lidarr
       - medusa
       - metube
+      - monit
       - pyload
       - radarr
       - sabnzbd
@@ -270,6 +271,45 @@ services:
       - "traefik.http.routers.metube.tls=true"
       - "traefik.http.routers.metube.middlewares=global-auth@file"
       - "traefik.http.routers.metube.tls.certresolver=default-ssl"
+
+
+  monit:
+    build:
+      context: dockerfiles/monit
+      args:
+        UID: 1000
+        GID: 1000
+        SMTP_HOST: $ARG_MONIT_SMTP_HOST
+        SMTP_PORT: $ARG_MONIT_SMTP_PORT
+        SMTP_USR: $ARG_MONIT_SMTP_USR
+        SMTP_PASS: $ARG_MONIT_SMTP_PASS
+        ALERT_EMAIL: $ARG_MONIT_ALERT_EMAIL
+    container_name: monit
+    depends_on:
+      - socket-proxy
+      - traefik
+    networks:
+      - dummy
+      - private
+      - proxy
+    expose:
+      - "2812"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+      - DOCKER_HOST=tcp://socket-proxy:2375
+      - DOCKER_CONTAINER_LIST=$ENV_MONIT_DOCKER_LIST
+    tmpfs:
+      - /tmp:uid=1000,gid=1000
+    read_only: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monit.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/monit`)"
+      - "traefik.http.routers.monit.tls=true"
+      - "traefik.http.middlewares.monit-stripprefix.stripprefix.prefixes=/monit"
+      - "traefik.http.routers.monit.middlewares=monit-auth-and-prefix"
+      - "traefik.http.middlewares.monit-auth-and-prefix.chain.middlewares=global-auth@file,monit-stripprefix@docker"
+      - "traefik.http.routers.monit.tls.certresolver=default-ssl"
 
 
   nzbhydra2:

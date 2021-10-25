@@ -1,0 +1,33 @@
+###
+# monit configuration file
+
+# httpd
+set httpd
+  port 2812
+  allow traefik
+
+# mailserver config
+set mailserver SMTP_HOST port SMTP_PORT
+  username "SMTP_USR" password "SMTP_PASS"
+  using tlsv1
+
+# alert config
+set alert ALERT_EMAIL not { instance }
+
+# script check : container_list
+check program container_list
+  with path /usr/local/bin/docker_container_list.py and with timeout 10 seconds
+  every 1 cycles
+  if status = 1 then alert
+
+# script check : container_ports
+check program container_ports
+  with path /usr/local/bin/docker_container_port.py and with timeout 10 seconds
+  every 1 cycles
+  if status = 1 then alert
+
+# script check : container_unhealthy
+check program container_healthy
+  with path /usr/local/bin/docker_container_unhealthy.py and with timeout 10 seconds
+  every 1 cycles
+  if status = 1 then alert
