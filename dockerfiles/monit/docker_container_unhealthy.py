@@ -19,23 +19,18 @@ def check_containers():
   if len(unhealthy_list) > 0:
     is_error = True
 
-  # output header
-  if is_error == True:
-    print('Error : at least one container is not healthy')
-  else:
+  # everything is okay
+  if is_error == False:
     print('All containers are healthy')
+    exit(0)
 
-  # output display
-  if is_error == True:
-    print('-')
+  # display unhealthy containers
+  print('Error : %d container(s) are not healthy' % len(unhealthy_list))
+  print('-')
   for line in unhealthy_list:
     print(line)
-
-  # check for errors
-  if is_error == True:
-    exit(1)
-  # everything is okay
-  exit(0)
+  # exit
+  exit(1)
 
 
 ## main
