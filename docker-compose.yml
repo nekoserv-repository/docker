@@ -101,6 +101,11 @@ services:
       - /mnt/nas/share/aria2:/home/aria2/complete
       - ~/docker-data/aria2/scripts:/home/aria2/scripts
     read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      interval: 1m
+      timeout: 2s
+      retries: 1
 
 
   aria2-webui:
@@ -186,6 +191,11 @@ services:
     volumes:
       - ~/docker-data/jackett:/home/jackett/data
     read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      interval: 1m
+      timeout: 2s
+      retries: 1
 
 
   lidarr:
@@ -333,6 +343,11 @@ services:
     volumes:
       - ~/docker-data/nzbhydra2/data:/home/nzbhydra2/data
     read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      interval: 1m
+      timeout: 2s
+      retries: 1
 
 
   openvpn-client:
@@ -496,6 +511,11 @@ services:
       - ~/docker-data/dl/postprocessing:/home/postprocessing
       - ~/docker-data/flood/temp:/home/flood/data/temp:ro
     read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      interval: 1m
+      timeout: 2s
+      retries: 1
     stdin_open: true
     tty: true
 
