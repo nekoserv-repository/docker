@@ -12,7 +12,7 @@ open_ports="1234 5678"
 config_file="/etc/openvpn/conf/openvpn.conf"
 docker_network_v4=$(ip -o addr show dev eth0 | awk '$3 == "inet" {print $4}')
 docker_network_v6=$(ip -o addr show dev eth0 | awk '$3 == "inet6" {print $4; exit}')
-vpn_port=$(awk '/^remote / {print($3); exit}' $config_file)
+vpn_ports=$(awk '/^remote / {print($3)}' $config_file | sort | uniq)
 vpn_proto="udp"
 proto=$(awk '/^proto tcp/' $config_file)
 if [ ! -z "$proto" ]; then
@@ -53,7 +53,9 @@ nft add rule ip filter OUTPUT oifname "lo" accept
 nft add rule ip filter OUTPUT oifname "tun*" accept
 nft add rule ip filter OUTPUT ip daddr ${docker_network_v4} accept
 nft add rule ip filter OUTPUT udp dport 53 accept
-nft add rule ip filter OUTPUT ${vpn_proto} dport ${vpn_port} accept
+for vpn_port in $vpn_ports; do
+  nft add rule ip filter OUTPUT ${vpn_proto} dport ${vpn_port} accept
+done
 #v6
 nft add chain ip6 filter OUTPUT { type nat hook output priority 0\; policy drop \;}
 nft add rule ip6 filter OUTPUT ip6 daddr ${docker_network_v6} accept
