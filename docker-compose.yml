@@ -579,9 +579,15 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
     restart: unless-stopped
     networks:
-      - dummy
-      - private
-      - proxy
+      dummy:
+        aliases:
+          - dummy.traefik
+      private:
+        aliases:
+          - private.traefik
+      proxy:
+        aliases:
+          - proxy.traefik
     ports:
       - "443:443"
     environment:
