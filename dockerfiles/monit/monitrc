@@ -5,6 +5,9 @@
 set httpd
   port 2812
   allow traefik
+  allow dummy.traefik
+  allow private.traefik
+  allow proxy.traefik
 
 # mailserver config
 set mailserver SMTP_HOST port SMTP_PORT
