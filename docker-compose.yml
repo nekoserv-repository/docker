@@ -40,6 +40,7 @@ services:
       - jackett
       - nzbhydra2
       - openvpn-client
+      - ping-me
       - rtorrent
       - rtorrent-rpc2
 
@@ -374,6 +375,27 @@ services:
       - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
       - "traefik.http.routers.nzbhydra2.service=service-nzbhydra2"
       - "traefik.http.services.service-nzbhydra2.loadbalancer.server.port=5076"
+
+
+  ping-me:
+    build:
+      context: dockerfiles/ping-me
+    container_name: ping-me
+    networks:
+      - private
+    expose:
+      - "39387"
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    tmpfs:
+      - /tmp
+    read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      interval: 1m
+      timeout: 2s
+      retries: 1
 
 
   pyload:
