@@ -16,14 +16,13 @@ RUN groupadd -g $GID jackett && \
     useradd -m -g jackett -u $UID jackett && \
     mkdir /home/jackett/data/ && \
     echo "deb http://deb.debian.org/debian buster main" > /etc/apt/source.list && \
-    apt-get update && apt-get install --no-install-recommends -y ca-certificates curl libicu67 && \
-    export version=$(curl --silent "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
+    apt-get update && apt-get install --no-install-recommends -y ca-certificates wget libicu67 && \
+    export version=$(wget -qO- "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
-    curl -L https://github.com/Jackett/Jackett/releases/download/$version/Jackett.Binaries.LinuxAMDx64.tar.gz -o jackett.tar.gz && \
+    wget -nv --show-progress --progress=bar:force:noscroll https://github.com/Jackett/Jackett/releases/download/$version/Jackett.Binaries.LinuxAMDx64.tar.gz -O jackett.tar.gz && \
     tar xzf jackett.tar.gz -C /home/jackett && \
     chown -R jackett /home/jackett && \
     rm jackett.tar.gz && \
-    apt-get autoremove --purge -y curl && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 # drop privileges
