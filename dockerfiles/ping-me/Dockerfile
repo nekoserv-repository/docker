@@ -18,4 +18,4 @@ RUN UID=$(( $RANDOM % 9000 + 1000 )) && \
 USER ping-me
 
 # run!
-ENTRYPOINT ["darkhttpd", "/home/ping-me", "--port", "39387", "--maxconn", "4"]
+ENTRYPOINT ["darkhttpd", "/home/ping-me", "--port", "39387", "--maxconn", "5"]

@@ -103,7 +103,7 @@ services:
     read_only: true
     healthcheck:
       test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
-      interval: 1m
+      interval: 10s
       timeout: 2s
       retries: 1
 
@@ -193,7 +193,7 @@ services:
     read_only: true
     healthcheck:
       test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
-      interval: 1m
+      interval: 10s
       timeout: 2s
       retries: 1
 
@@ -345,7 +345,7 @@ services:
     read_only: true
     healthcheck:
       test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
-      interval: 1m
+      interval: 10s
       timeout: 2s
       retries: 1
 
@@ -408,7 +408,7 @@ services:
     read_only: true
     healthcheck:
       test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
-      interval: 1m
+      interval: 10s
       timeout: 2s
       retries: 1
 
@@ -513,7 +513,7 @@ services:
     read_only: true
     healthcheck:
       test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
-      interval: 1m
+      interval: 10s
       timeout: 2s
       retries: 1
     stdin_open: true
