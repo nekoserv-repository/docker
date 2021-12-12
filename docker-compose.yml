@@ -51,7 +51,6 @@ services:
       args:
         UID: 1000
         GID: 1000
-        CUSTOM_JS: 1
     container_name: homepage
     networks:
       - private
@@ -64,7 +63,6 @@ services:
       - /tmp
     volumes:
       - ~/docker-data/homepage/config.yml:/home/homepage/assets/config.yml:ro
-      - ~/docker-data/homepage/custom.js:/home/homepage/js/custom.js:ro
       - ~/docker-data/homepage/external-resources:/home/homepage/assets/external-resources:ro
       - ~/docker-data/homepage/icons:/home/homepage/assets/icons:ro
     read_only: true
