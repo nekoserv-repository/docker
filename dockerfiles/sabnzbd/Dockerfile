@@ -20,18 +20,26 @@ RUN groupadd -g $GID sabnzbd && \
     mkdir /home/incomplete && \
     sed -i -e '/^deb / s/$/ non-free/' /etc/apt/sources.list && \
     apt-get update && apt-get install --no-install-recommends -y curl p7zip-full par2 unrar unzip && \
-    curl https://raw.githubusercontent.com/sabnzbd/sabnzbd/master/requirements.txt -o requirements.txt && \
-    pip install -r requirements.txt && rm requirements.txt && \
+    curl https://raw.githubusercontent.com/sabnzbd/sabnzbd/master/requirements.txt -o /home/sabnzbd/sabnzbd-requirements.txt && \
+    curl https://bootstrap.pypa.io/get-pip.py -o /home/sabnzbd/get-pip.py && \
     curl -L $(curl --silent "https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest" \
       | grep '"tarball_url":' | sed -E 's/.*"([^"]+)".*/\1/') -o sabnzbd.tar.gz && \
     tar xzf sabnzbd.tar.gz --strip 1 -C /home/sabnzbd/sabnzbd-release/ && \
     chown -R sabnzbd:sabnzbd /home/sabnzbd && \
     rm sabnzbd.tar.gz && \
+    python -m pip uninstall -y pip 2>/dev/null && \
     apt-get autoremove --purge -y curl && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 # drop privileges
 USER sabnzbd
+WORKDIR /home/sabnzbd
+
+# requirements
+ENV PATH="/home/sabnzbd/.local/bin:${PATH}"
+RUN python get-pip.py && \
+    python -m pip install --no-cache-dir --no-compile --user -r sabnzbd-requirements.txt && \
+    rm get-pip.py sabnzbd-requirements.txt
 
 # volume for config, db & runtime stuff
 VOLUME ["/home/sabnzbd/config"]
