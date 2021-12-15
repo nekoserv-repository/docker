@@ -430,9 +430,8 @@ services:
     tmpfs:
       - /tmp
     volumes:
-      - ~/docker-data/pyload/conf:/home/pyload/.pyload
-      - ~/docker-data/pyload/plugins:/home/pyload/module/plugins
-      - ~/docker-data/dl/incomplete/pyload:/home/pyload/dl
+      - ~/docker-data/pyload:/home/pyload
+      - ~/docker-data/dl/incomplete/pyload:/home/pyload/Downloads/pyLoad
     read_only: true
     labels:
       - "traefik.enable=true"
