@@ -11,8 +11,8 @@ ARG UID
 ARG GID
 
 # install stuff, get app & cleanup
-RUN addgroup -q --gid 1000 pyload && \
-    useradd -u 1000 -g 1000 pyload && \
+RUN addgroup -q --gid $UID pyload && \
+    useradd -u $UID -g $GID pyload && \
     mkdir -p /home/pyload && \
     apt-get update && apt-get install --no-install-recommends -y curl libcurl4-openssl-dev gcc wget libc6-dev libssl-dev net-tools && \
     chown -R pyload:pyload /home/pyload && \
