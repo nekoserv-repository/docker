@@ -8,7 +8,7 @@
 #
 
 ## init.
-open_ports="1234 5678"
+open_ports="$CFG_OPEN_PORTS"
 config_file="/etc/openvpn/conf/openvpn.conf"
 docker_network_v4=$(ip -o addr show dev eth0 | awk '$3 == "inet" {print $4}')
 docker_network_v6=$(ip -o addr show dev eth0 | awk '$3 == "inet6" {print $4; exit}')

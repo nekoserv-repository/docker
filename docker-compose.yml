@@ -363,6 +363,7 @@ services:
       - "5001"
     environment:
       - TZ=$ENV_TIMEZONE
+      - CFG_OPEN_PORTS=$ENV_OVPN_OPEN_PORTS
     tmpfs:
       - /run
       - /tmp
