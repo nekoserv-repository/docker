@@ -37,6 +37,7 @@ services:
     container_name: vpn-services
     depends_on:
       - aria2
+      - flaresolverr
       - jackett
       - nzbhydra2
       - openvpn-client
@@ -132,6 +133,25 @@ services:
       - "traefik.http.routers.aria2.middlewares=aria2-auth-and-prefix"
       - "traefik.http.middlewares.aria2-auth-and-prefix.chain.middlewares=global-auth@file,aria2-stripprefix@docker"
       - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
+
+
+  flaresolverr:
+    image: flaresolverr/flaresolverr
+    container_name: flaresolverr
+    depends_on:
+      - openvpn-client
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    network_mode: service:openvpn-client
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+    read_only: false
+    healthcheck:
+      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      interval: 10s
+      timeout: 2s
+      retries: 1
 
 
   flood:
