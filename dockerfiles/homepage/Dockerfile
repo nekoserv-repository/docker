@@ -21,6 +21,7 @@ RUN [[ -z "$UID" ]] && UID=$(( $RANDOM % 9000 + 1000 )) || UID=$UID && \
     apk add --no-cache curl nginx tzdata unzip && \
     export version=$(curl --silent "https://api.github.com/repos/bastienwirtz/homer/releases/latest" \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
+    export version="v22.07.1" && \
     curl -L https://github.com/bastienwirtz/homer/releases/download/$version/homer.zip -o homepage.zip && \
     unzip -q homepage.zip -d /home/homepage && \
     chown -R $UID:$GID /home/homepage && \
