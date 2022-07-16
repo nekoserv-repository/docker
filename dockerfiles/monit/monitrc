@@ -12,7 +12,7 @@ set httpd
 # mailserver config
 set mailserver SMTP_HOST port SMTP_PORT
   username "SMTP_USR" password "SMTP_PASS"
-  using tlsv1
+  using tls
 
 # alert config
 set alert ALERT_EMAIL not { instance }
