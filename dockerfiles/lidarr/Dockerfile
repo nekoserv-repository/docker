@@ -16,7 +16,7 @@ RUN addgroup -g $GID lidarr && \
     adduser -S -u $UID -G lidarr lidarr && \
     apk add --no-cache curl chromaprint tzdata icu-libs libintl sqlite-libs && \
     mkdir -p /home/lidarr/data/ && \
-    export version=$(curl --silent "https://api.github.com/repos/lidarr/Lidarr/releases" \
+    export version=$(curl --silent "https://api.github.com/repos/lidarr/Lidarr/releases/latest" \
       |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
     curl -L https://github.com/lidarr/Lidarr/releases/download/v$version/Lidarr.master.$version.linux-musl-core-x64.tar.gz -o lidarr.tar.gz && \
     tar xzf lidarr.tar.gz -C /home/lidarr && \
