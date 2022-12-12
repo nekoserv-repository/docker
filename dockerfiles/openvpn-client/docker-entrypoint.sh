@@ -23,6 +23,7 @@ fi
 nft add table ip filter
 nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }
 nft add rule ip filter INPUT ct state { established, related } accept
+nft add rule ip filter INPUT ct state { invalid } drop
 nft add rule ip filter INPUT iifname "lo" accept
 nft add rule ip filter INPUT ip saddr ${docker_network_v4} accept
 for port in $open_ports; do
