@@ -26,8 +26,8 @@ nft add rule ip filter INPUT ct state { established, related } accept
 nft add rule ip filter INPUT iifname "lo" accept
 nft add rule ip filter INPUT ip saddr ${docker_network_v4} accept
 for port in $open_ports; do
-  nft add rule ip filter INPUT iifname "tun*" tcp dport ${port} accept
-  nft add rule ip filter INPUT iifname "tun*" udp dport ${port} accept
+  nft add rule ip filter INPUT iifname "tun0" tcp dport ${port} accept
+  nft add rule ip filter INPUT iifname "tun0" udp dport ${port} accept
 done
 #v6
 nft add table ip6 filter
@@ -49,7 +49,7 @@ nft add rule ip filter FORWARD ip daddr ${docker_network_v4} accept
 nft add chain ip filter OUTPUT { type filter hook output priority 0\; policy drop\; }
 nft add rule ip filter OUTPUT ct state { established, related } accept
 nft add rule ip filter OUTPUT oifname "lo" accept
-nft add rule ip filter OUTPUT oifname "tun*" accept
+nft add rule ip filter OUTPUT oifname "tun0" accept
 nft add rule ip filter OUTPUT ip daddr ${docker_network_v4} accept
 nft add rule ip filter OUTPUT udp dport 53 accept
 #v4 - output allowed for each remote with specific port and proto
