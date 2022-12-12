@@ -51,7 +51,6 @@ nft add rule ip filter OUTPUT ct state { established, related } accept
 nft add rule ip filter OUTPUT oifname "lo" accept
 nft add rule ip filter OUTPUT oifname "tun0" accept
 nft add rule ip filter OUTPUT ip daddr ${docker_network_v4} accept
-nft add rule ip filter OUTPUT udp dport 53 accept
 #v4 - output allowed for each remote with specific port and proto
 awk '/^remote /' $config_file | sort | uniq | while read remote; do
   vpn_ip=$(echo $remote | awk '{print$2}')
