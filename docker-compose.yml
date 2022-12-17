@@ -314,7 +314,7 @@ services:
         SMTP_PASS: $ARG_MONIT_SMTP_PASS
         ALERT_EMAIL: $ARG_MONIT_ALERT_EMAIL
     container_name: monit
-    hostname: monit
+    hostname: monit-docker
     depends_on:
       - socket-proxy
       - traefik
@@ -337,8 +337,14 @@ services:
       - "traefik.http.routers.monit.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/monit`)"
       - "traefik.http.routers.monit.tls=true"
       - "traefik.http.middlewares.monit-stripprefix.stripprefix.prefixes=/monit"
-      - "traefik.http.routers.monit.middlewares=monit-auth-and-prefix"
-      - "traefik.http.middlewares.monit-auth-and-prefix.chain.middlewares=global-auth@file,monit-stripprefix@docker"
+      - "traefik.http.middlewares.monit-redirect1.redirectregex.regex=^(.*)/monit-container/monit-container/(.*)"
+      - "traefik.http.middlewares.monit-redirect1.redirectregex.replacement=$${1}/monit-container/$${2}"
+      - "traefik.http.middlewares.monit-redirect2.redirectregex.regex=^https://$ENV_DOMAIN/monit-container/(.*)"
+      - "traefik.http.middlewares.monit-redirect2.redirectregex.replacement=https://$ENV_DOMAIN/monit/monit-container/$${1}"
+      - "traefik.http.middlewares.monit-redirect3.redirectregex.regex=^https://$ENV_DOMAIN/monit/monit-container/$$"
+      - "traefik.http.middlewares.monit-redirect3.redirectregex.replacement=https://$ENV_DOMAIN/monit/"
+      - "traefik.http.routers.monit.middlewares=monit-middlewares"
+      - "traefik.http.middlewares.monit-middlewares.chain.middlewares=global-auth@file,monit-redirect1@docker,monit-redirect2@docker,monit-redirect3@docker,monit-stripprefix@docker"
       - "traefik.http.routers.monit.tls.certresolver=default-ssl"
 
 

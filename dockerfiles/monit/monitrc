@@ -17,20 +17,20 @@ set mailserver SMTP_HOST port SMTP_PORT
 # alert config
 set alert ALERT_EMAIL not { instance }
 
-# script check : container_list
-check program container_list
+# script check : monit-container/list
+check program monit-container/list
   with path /usr/local/bin/docker_container_list.py and with timeout 10 seconds
   every 1 cycles
   if status = 1 then alert
 
-# script check : container_ports
-check program container_ports
+# script check : monit-container/ports
+check program monit-container/ports
   with path /usr/local/bin/docker_container_port.py and with timeout 10 seconds
   every 1 cycles
   if status = 1 then alert
 
-# script check : container_unhealthy
-check program container_healthy
+# script check : monit-container/unhealthy
+check program monit-container/unhealthy
   with path /usr/local/bin/docker_container_unhealthy.py and with timeout 10 seconds
   every 1 cycles
   if status = 1 then alert
