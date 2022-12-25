@@ -14,7 +14,7 @@ ARG GID
 RUN addgroup -q --gid $UID pyload && \
     useradd -u $UID -g $GID pyload && \
     mkdir -p /home/pyload && \
-    apt-get update && apt-get install --no-install-recommends -y curl libcurl4-openssl-dev gcc wget libc6-dev libssl-dev net-tools && \
+    apt-get update && apt-get install --no-install-recommends -y curl libcurl4-openssl-dev gcc libc6-dev libssl-dev net-tools tini && \
     chown -R pyload:pyload /home/pyload && \
     pip install --pre pyload-ng[all] && \
     apt-get autoremove --purge -y libcurl4-openssl-dev gcc wget libc6-dev libssl-dev && \
@@ -24,4 +24,4 @@ RUN addgroup -q --gid $UID pyload && \
 USER pyload
 
 # run!
-ENTRYPOINT ["pyload"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/pyload"]
