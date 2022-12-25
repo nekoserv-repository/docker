@@ -13,7 +13,7 @@ ARG GID
 # install stuff, get app & cleanup
 RUN addgroup -g $GID flood && \
     adduser -S -u $UID -G flood flood && \
-    apk add --no-cache curl mediainfo tzdata && \
+    apk add --no-cache curl mediainfo tini tzdata && \
     export version=$(curl --silent "https://api.github.com/repos/jesec/flood/releases/latest" \
       |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
     curl -L https://github.com/jesec/flood/releases/download/v$version/flood-linux-x64 -o /home/flood/flood-linux && \
@@ -25,4 +25,4 @@ RUN addgroup -g $GID flood && \
 USER flood
 
 # run!
-ENTRYPOINT ["/home/flood/flood-linux"]
+ENTRYPOINT ["/sbin/tini", "--", "/home/flood/flood-linux"]
