@@ -20,7 +20,7 @@ RUN groupadd -g $GID nzbhydra2 && \
     curl -L https://github.com/theotherp/nzbhydra2/releases/download/v$version/nzbhydra2-$version-linux.zip -o nzbhydra2.zip && \
     unzip -q nzbhydra2.zip -d /home/nzbhydra2 && \
     chown -R nzbhydra2 /home/nzbhydra2 && \
-    chmod +x /home/nzbhydra2/nzbhydra2 && \
+    chmod +x /home/nzbhydra2/nzbhydra2 /home/nzbhydra2/core && \
     apt-get autoremove --purge -y curl unzip && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
@@ -30,5 +30,8 @@ USER nzbhydra2
 # volume for config, db & runtime stuff
 VOLUME ["/home/nzbhydra2/data/"]
 
+# change workdir
+WORKDIR /home/nzbhydra2
+
 # run!
-ENTRYPOINT ["/home/nzbhydra2/nzbhydra2", "--datafolder", "/home/nzbhydra2/data/"]
+ENTRYPOINT ["./nzbhydra2", "--datafolder", "/home/nzbhydra2/data/"]
