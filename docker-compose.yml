@@ -148,7 +148,7 @@ services:
       - TZ=$ENV_TIMEZONE
     read_only: false
     healthcheck:
-      test: ["CMD", "wget", "-qO/dev/null", "ping-me:39387"]
+      test: ["CMD", "curl", "--fail", "-so/dev/null", "ping-me:39387"]
       interval: 10s
       timeout: 2s
       retries: 1
