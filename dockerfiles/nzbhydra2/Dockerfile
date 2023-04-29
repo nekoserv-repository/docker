@@ -14,7 +14,8 @@ ARG GID
 RUN groupadd -g $GID nzbhydra2 && \
     useradd -m -g nzbhydra2 -u $UID nzbhydra2 && \
     mkdir /home/nzbhydra2/data && \
-    apt-get update && apt-get install --no-install-recommends -y curl unzip && \
+    apt-get update && apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y curl python3 unzip && \
     export version=$(curl --silent "https://api.github.com/repos/theotherp/nzbhydra2/releases/latest" \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk '{print(substr($1,2))}') && \
     curl -L https://github.com/theotherp/nzbhydra2/releases/download/v$version/nzbhydra2-$version-amd64-linux.zip -o nzbhydra2.zip && \
@@ -34,4 +35,4 @@ VOLUME ["/home/nzbhydra2/data/"]
 WORKDIR /home/nzbhydra2
 
 # run!
-ENTRYPOINT ["./nzbhydra2", "--datafolder", "/home/nzbhydra2/data/"]
+ENTRYPOINT ["python3", "./nzbhydra2wrapperPy3.py", "--datafolder", "/home/nzbhydra2/data/"]
