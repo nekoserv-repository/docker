@@ -10,7 +10,7 @@ LABEL version="1.0"
 COPY docker-entrypoint.sh /usr/local/sbin/
 
 # openvpn install & clean
-RUN apk add --no-cache nftables openvpn tini tzdata && \
+RUN apk add --no-cache drill nftables openvpn tini tzdata && \
     chmod 0700 /usr/local/sbin/docker-entrypoint.sh
 
 # config directory
