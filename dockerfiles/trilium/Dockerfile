@@ -1,4 +1,4 @@
-FROM debian:11-slim
+FROM debian:12-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"

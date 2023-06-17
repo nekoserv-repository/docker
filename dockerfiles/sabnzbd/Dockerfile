@@ -18,7 +18,7 @@ RUN groupadd -g $GID sabnzbd && \
     mkdir /home/sabnzbd/complete && \
     mkdir /home/postprocessing && \
     mkdir /home/incomplete && \
-    sed -i -e '/^deb / s/$/ non-free/' /etc/apt/sources.list && \
+    sed -i -e '/^Components: .*/ s/$/ non-free/' /etc/apt/sources.list.d/debian.sources && \
     apt-get update && apt-get install --no-install-recommends -y curl p7zip-full par2 unrar unzip && \
     curl https://raw.githubusercontent.com/sabnzbd/sabnzbd/master/requirements.txt -o /home/sabnzbd/sabnzbd-requirements.txt && \
     curl https://bootstrap.pypa.io/get-pip.py -o /home/sabnzbd/get-pip.py && \

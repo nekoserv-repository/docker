@@ -1,4 +1,4 @@
-FROM debian:11-slim
+FROM debian:12-slim
 
 # Dokerfile's infos
 LABEL maintainer="nekoserv" mail="nekoserv@fai.tld"
@@ -15,8 +15,7 @@ ENV XDG_CONFIG_HOME="/home/jackett/data"
 RUN groupadd -g $GID jackett && \
     useradd -m -g jackett -u $UID jackett && \
     mkdir /home/jackett/data/ && \
-    echo "deb http://deb.debian.org/debian buster main" > /etc/apt/source.list && \
-    apt-get update && apt-get install --no-install-recommends -y ca-certificates wget libicu67 && \
+    apt-get update && apt-get install --no-install-recommends -y ca-certificates wget libicu72 && \
     export version=$(wget -qO- "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
       | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
     wget -nv --show-progress --progress=bar:force:noscroll https://github.com/Jackett/Jackett/releases/download/$version/Jackett.Binaries.LinuxAMDx64.tar.gz -O jackett.tar.gz && \
