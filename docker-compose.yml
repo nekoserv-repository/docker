@@ -399,7 +399,7 @@ services:
       - ~/docker-data/openvpn-config/resolv.conf:/etc/resolv.conf:ro
     read_only: true
     healthcheck:
-      test: ["CMD", "drill", "TXT", "o-o.myaddr.l.google.com", "@ns1.google.com", "|", "grep", "2a03"]
+      test: ["CMD", "drill", "-4", "TXT", "o-o.myaddr.l.google.com", "@8.8.8.8"]
       interval: 1m
       timeout: 2s
       retries: 1
