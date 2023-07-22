@@ -396,6 +396,7 @@ services:
     volumes:
       - /dev/net:/dev/net:z
       - ~/docker-data/openvpn-config:/etc/openvpn/conf:ro
+      - ~/docker-data/openvpn-config/resolv.conf:/etc/resolv.conf:ro
     read_only: true
     healthcheck:
       test: ["CMD", "drill", "TXT", "o-o.myaddr.l.google.com", "@ns1.google.com", "|", "grep", "2a03"]
