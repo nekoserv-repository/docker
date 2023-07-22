@@ -501,6 +501,7 @@ services:
     volumes:
       - ~/docker-data/radarr:/home/radarr/data
       - ~/docker-data/dl/postprocessing/movies:/home/postprocessing/movies
+      - ~/docker-data/dl/incomplete/torrent:/home/incomplete:ro
       - /mnt/nas/FILMS:/home/radarr/dl
     read_only: true
     labels:
