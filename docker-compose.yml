@@ -85,8 +85,6 @@ services:
     restart: unless-stopped
     depends_on:
       - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
     network_mode: service:openvpn-client
     environment:
       - TZ=$ENV_TIMEZONE
@@ -140,8 +138,6 @@ services:
     container_name: flaresolverr
     depends_on:
       - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
     network_mode: service:openvpn-client
     restart: unless-stopped
     environment:
@@ -198,8 +194,6 @@ services:
     container_name: jackett
     depends_on:
       - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
     network_mode: service:openvpn-client
     restart: unless-stopped
     environment:
@@ -357,8 +351,6 @@ services:
     container_name: nzbhydra2
     depends_on:
       - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
     network_mode: service:openvpn-client
     restart: unless-stopped
     environment:
@@ -522,8 +514,6 @@ services:
     restart: unless-stopped
     depends_on:
       - openvpn-client
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
     network_mode: service:openvpn-client
     environment:
       - TZ=$ENV_TIMEZONE
