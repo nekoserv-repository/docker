@@ -36,4 +36,4 @@ RUN sed -i -e "s/SMTP_HOST/`echo $SMTP_HOST`/g" /etc/monitrc && \
 USER monit
 
 # run!
-CMD ["/usr/bin/monit", "-I", "-d", "300", "-v"]
+CMD ["/usr/bin/monit", "-I", "-v"]

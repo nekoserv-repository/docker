@@ -1,6 +1,10 @@
 ###
 # monit configuration file
 
+# daemon mode
+set daemon 300
+  with start delay 30
+
 # httpd
 set httpd
   port 2812
