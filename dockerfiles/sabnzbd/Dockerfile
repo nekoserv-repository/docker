@@ -19,7 +19,7 @@ RUN groupadd -g $GID sabnzbd && \
     mkdir /home/postprocessing && \
     mkdir /home/incomplete && \
     sed -i -e '/^Components: .*/ s/$/ non-free/' /etc/apt/sources.list.d/debian.sources && \
-    apt-get update && apt-get install --no-install-recommends -y curl p7zip-full par2 unrar unzip && \
+    apt-get update && apt-get install --no-install-recommends -y curl p7zip-full unrar unzip xz-utils && \
     curl https://raw.githubusercontent.com/sabnzbd/sabnzbd/master/requirements.txt -o /home/sabnzbd/sabnzbd-requirements.txt && \
     curl https://bootstrap.pypa.io/get-pip.py -o /home/sabnzbd/get-pip.py && \
     curl -L $(curl --silent "https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest" \
@@ -27,8 +27,15 @@ RUN groupadd -g $GID sabnzbd && \
     tar xzf sabnzbd.tar.gz --strip 1 -C /home/sabnzbd/sabnzbd-release/ && \
     chown -R sabnzbd:sabnzbd /home/sabnzbd && \
     rm sabnzbd.tar.gz && \
+    export version=$(curl --silent "https://api.github.com/repos/animetosho/par2cmdline-turbo/releases/latest" \
+      |  awk '/"tag_name":/ {print; exit;}' | sed -E 's/.*"v([^"]+)".*/\1/') && \
+    curl -L https://github.com/animetosho/par2cmdline-turbo/releases/download/v$version/par2cmdline-turbo-v$version-linux-amd64.xz -o par2cmdline-turbo.xz && \
+    unxz -d par2cmdline-turbo.xz && \
+    mv par2cmdline-turbo /usr/local/bin/par2 && \
+    chmod 0700 /usr/local/bin/par2 && \
+    chown sabnzbd:sabnzbd /usr/local/bin/par2 && \
     python -m pip uninstall -y pip 2>/dev/null && \
-    apt-get autoremove --purge -y curl && \
+    apt-get autoremove --purge -y curl xz-utils && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 # drop privileges
