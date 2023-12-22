@@ -540,9 +540,6 @@ services:
   rtorrent-rpc2:
     build:
       context: dockerfiles/rtorrent-rpc2
-      args:
-        CONTAINER_NAME: openvpn-client
-        RTORRENT_PORT: 5001
     container_name: rtorrent-rpc2
     networks:
       - private
@@ -551,6 +548,8 @@ services:
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
+      - ENV_CONTAINER_NAME=openvpn-client
+      - ENV_RTORRENT_PORT=5001
     tmpfs:
       - /tmp
     read_only: true
