@@ -6,12 +6,9 @@ LABEL description="Alpine + python3 + metube"
 LABEL website="https://github.com/TODO/docker-metube"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # install stuff, get app & cleanup
-RUN addgroup -g $GID metube && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID metube && \
     adduser -S -u $UID -G metube metube && \
     apk add --no-cache tzdata
 
