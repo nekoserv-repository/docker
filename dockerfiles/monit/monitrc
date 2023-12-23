@@ -14,12 +14,12 @@ set httpd
   allow proxy.traefik
 
 # mailserver config
-set mailserver SMTP_HOST port SMTP_PORT
-  username "SMTP_USR" password "SMTP_PASS"
+set mailserver $ENV_SMTP_HOST port $ENV_SMTP_PORT
+  username "$ENV_SMTP_USR" password "$ENV_SMTP_PASS"
   using tls
 
 # alert config
-set alert ALERT_EMAIL not { instance }
+set alert $ENV_ALERT_EMAIL not { instance }
 
 # script check : monit-container/list
 check program monit-container/list

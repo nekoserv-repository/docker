@@ -301,11 +301,6 @@ services:
       args:
         UID: 1000
         GID: 1000
-        SMTP_HOST: $ARG_MONIT_SMTP_HOST
-        SMTP_PORT: $ARG_MONIT_SMTP_PORT
-        SMTP_USR: $ARG_MONIT_SMTP_USR
-        SMTP_PASS: $ARG_MONIT_SMTP_PASS
-        ALERT_EMAIL: $ARG_MONIT_ALERT_EMAIL
     container_name: monit
     hostname: monit-docker
     depends_on:
@@ -322,6 +317,11 @@ services:
       - TZ=$ENV_TIMEZONE
       - DOCKER_HOST=tcp://socket-proxy:2375
       - DOCKER_CONTAINER_LIST=$ENV_MONIT_DOCKER_LIST
+      - ENV_SMTP_HOST=$ARG_MONIT_SMTP_HOST
+      - ENV_SMTP_PORT=$ARG_MONIT_SMTP_PORT
+      - ENV_SMTP_USR=$ARG_MONIT_SMTP_USR
+      - ENV_SMTP_PASS=$ARG_MONIT_SMTP_PASS
+      - ENV_ALERT_EMAIL=$ARG_MONIT_ALERT_EMAIL
     tmpfs:
       - /tmp:uid=1000,gid=1000
     read_only: true
