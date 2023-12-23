@@ -6,16 +6,12 @@ LABEL description="Alpine & nginx & homer"
 LABEL website="https://github.com/TODO/docker-homer"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # install
-RUN [[ -z "$UID" ]] && UID=$(( $RANDOM % 9000 + 1000 )) || UID=$UID && \
-    [[ -z "$GID" ]] && GID=$(( $RANDOM % 9000 + 1000 )) || GID=$UID && \
+RUN UID=$(( $RANDOM % 9000 + 1000 )) && \
+    GID=$(( $RANDOM % 9000 + 1000 )) && \
     addgroup -g $GID homepage && \
     adduser -S -u $UID -G homepage homepage && \
     apk add --no-cache curl nginx tzdata unzip && \
