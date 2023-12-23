@@ -7,12 +7,11 @@ LABEL website="https://github.com/TODO/docker-radarr"
 LABEL version="1.0"
 
 # init
-ARG UID
-ARG GID
 ENV XDG_CONFIG_HOME="/home/radarr/data"
 
 # add group/user, then get app & cleanup
-RUN addgroup -g $GID radarr && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID radarr && \
     adduser -S -u $UID -G radarr radarr && \
     apk add --no-cache curl mediainfo tzdata icu-libs libintl sqlite-libs && \
     mkdir -p /home/radarr/data/ && \
