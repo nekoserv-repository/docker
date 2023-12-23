@@ -6,12 +6,9 @@ LABEL description="Debian slim + python3 + pyload-ng"
 LABEL website="https://github.com/TODO/docker-pyload"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # install stuff, get app & cleanup
-RUN addgroup -q --gid $UID pyload && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -q --gid $UID pyload && \
     useradd -u $UID -g $GID pyload && \
     mkdir -p /home/pyload && \
     apt-get update && apt-get install --no-install-recommends -y curl libcurl4-openssl-dev gcc libc6-dev libssl-dev net-tools tini && \

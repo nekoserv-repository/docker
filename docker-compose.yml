@@ -407,9 +407,6 @@ services:
   pyload:
     build:
       context: dockerfiles/pyload
-      args:
-        UID: 1000
-        GID: 1000
     container_name: pyload
     networks:
       - dummy
