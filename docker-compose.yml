@@ -47,8 +47,7 @@ services:
 
 
   homepage:
-    build:
-      context: homepage
+    build: homepage
     container_name: homepage
     networks:
       - private
@@ -73,8 +72,7 @@ services:
 
 
   aria2:
-    build:
-      context: aria2
+    build: aria2
     container_name: aria2
     restart: unless-stopped
     depends_on:
@@ -100,8 +98,7 @@ services:
 
 
   aria2-webui:
-    build:
-      context: aria2-webui
+    build: aria2-webui
     container_name: aria2-webui
     networks:
       - private
@@ -144,8 +141,7 @@ services:
 
 
   flood:
-    build:
-      context: flood
+    build: flood
     container_name: flood
     networks:
       - private
@@ -176,8 +172,7 @@ services:
 
 
   jackett:
-    build:
-      context: jackett
+    build: jackett
     container_name: jackett
     depends_on:
       - openvpn-client
@@ -198,8 +193,7 @@ services:
 
 
   lidarr:
-    build:
-      context: lidarr
+    build: lidarr
     container_name: lidarr
     networks:
       - private
@@ -224,8 +218,7 @@ services:
 
 
   medusa:
-    build:
-      context: medusa
+    build: medusa
     container_name: medusa
     networks:
       - private
@@ -250,8 +243,7 @@ services:
 
 
   metube:
-    build:
-      context: metube
+    build: metube
     container_name: metube
     networks:
       - dummy
@@ -275,8 +267,7 @@ services:
 
 
   monit:
-    build:
-      context: monit
+    build: monit
     container_name: monit
     hostname: monit-docker
     depends_on:
@@ -318,8 +309,7 @@ services:
 
 
   nzbhydra2:
-    build:
-      context: nzbhydra2
+    build: nzbhydra2
     container_name: nzbhydra2
     depends_on:
       - openvpn-client
@@ -384,8 +374,7 @@ services:
 
 
   ping-me:
-    build:
-      context: ping-me
+    build: ping-me
     container_name: ping-me
     networks:
       - private
@@ -405,8 +394,7 @@ services:
 
 
   pyload:
-    build:
-      context: pyload
+    build: pyload
     container_name: pyload
     networks:
       - dummy
@@ -444,8 +432,7 @@ services:
 
 
   radarr:
-    build:
-      context: radarr
+    build: radarr
     container_name: radarr
     networks:
       - private
@@ -471,8 +458,7 @@ services:
 
 
   rtorrent:
-    build:
-      context: rtorrent
+    build: rtorrent
     container_name: rtorrent
     restart: unless-stopped
     depends_on:
@@ -501,8 +487,7 @@ services:
 
 
   rtorrent-rpc2:
-    build:
-      context: rtorrent-rpc2
+    build: rtorrent-rpc2
     container_name: rtorrent-rpc2
     networks:
       - private
@@ -519,8 +504,7 @@ services:
 
 
   sabnzbd:
-    build:
-      context: sabnzbd
+    build: sabnzbd
     container_name: sabnzbd
     networks:
       - private
@@ -589,8 +573,7 @@ services:
 
 
   trilium:
-    build:
-      context: trilium
+    build: trilium
     container_name: trilium
     networks:
       - dummy
