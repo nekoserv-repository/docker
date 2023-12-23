@@ -320,9 +320,6 @@ services:
   nzbhydra2:
     build:
       context: dockerfiles/nzbhydra2
-      args:
-        UID: 1000
-        GID: 1000
     container_name: nzbhydra2
     depends_on:
       - openvpn-client

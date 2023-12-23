@@ -6,12 +6,9 @@ LABEL description="Alpine + jre + NZBHydra2"
 LABEL website="https://github.com/TODO/docker-nzbhydra2"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # add group/user, then get app & cleanup
-RUN groupadd -g $GID nzbhydra2 && \
+RUN UID=1000 && GID=1000 && \
+    groupadd -g $GID nzbhydra2 && \
     useradd -m -g nzbhydra2 -u $UID nzbhydra2 && \
     mkdir /home/nzbhydra2/data && \
     apt-get update && apt-get upgrade -y && \
