@@ -591,9 +591,6 @@ services:
   trilium:
     build:
       context: dockerfiles/trilium
-      args:
-        UID: 1000
-        GID: 1000
     container_name: trilium
     networks:
       - dummy

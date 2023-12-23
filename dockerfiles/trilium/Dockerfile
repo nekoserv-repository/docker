@@ -6,12 +6,9 @@ LABEL description="Debian & trilium"
 LABEL website="https://github.com/TODO/docker-trilium"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # install stuff, get app & cleanup
-RUN groupadd -g $GID trilium && \
+RUN UID=1000 && GID=1000 && \
+    groupadd -g $GID trilium && \
     useradd -m -g trilium -u $UID trilium && \
     apt-get update && apt-get install --no-install-recommends -y ca-certificates curl tzdata xz-utils && \
     export version=$(curl --silent "https://api.github.com/repos/zadam/trilium/releases/latest" \
