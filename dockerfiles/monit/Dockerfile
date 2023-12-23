@@ -6,16 +6,13 @@ LABEL description="Alpine + monit"
 LABEL website="https://github.com/TODO/docker-monit"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # copy stuff
 COPY monitrc /etc/monitrc.template
 COPY *.py /usr/local/bin/
 
 # install stuff, get app & cleanup
-RUN addgroup -g $GID monit && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID monit && \
     adduser -S -h /tmp -u $UID -G monit monit && \
     apk add --no-cache curl gettext-envsubst monit tzdata && \
     chown monit:monit /etc/monitrc /usr/local/bin/* && \

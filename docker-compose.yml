@@ -277,9 +277,6 @@ services:
   monit:
     build:
       context: dockerfiles/monit
-      args:
-        UID: 1000
-        GID: 1000
     container_name: monit
     hostname: monit-docker
     depends_on:
