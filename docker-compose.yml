@@ -473,9 +473,6 @@ services:
   rtorrent:
     build:
       context: dockerfiles/rtorrent
-      args:
-        UID: 1000
-        GID: 1000
     container_name: rtorrent
     restart: unless-stopped
     depends_on:
