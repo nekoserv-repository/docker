@@ -6,12 +6,9 @@ LABEL description="Alpine + python3 + medusa"
 LABEL website="https://github.com/TODO/docker-medusa"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # install stuff, get app & cleanup
-RUN addgroup -g $GID medusa && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID medusa && \
     adduser -S -u $UID -G medusa medusa && \
     apk add --no-cache curl mediainfo tzdata && \
     mkdir /home/medusa/app && \

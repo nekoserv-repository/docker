@@ -226,9 +226,6 @@ services:
   medusa:
     build:
       context: dockerfiles/medusa
-      args:
-        UID: 1000
-        GID: 1000
     container_name: medusa
     networks:
       - private
