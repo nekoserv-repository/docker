@@ -7,12 +7,11 @@ LABEL website="https://github.com/TODO/docker-jackett"
 LABEL version="1.0"
 
 # init
-ARG UID
-ARG GID
 ENV XDG_CONFIG_HOME="/home/jackett/data"
 
 # add group/user, then get app & cleanup
-RUN groupadd -g $GID jackett && \
+RUN UID=1000 && GID=1000 && \
+    groupadd -g $GID jackett && \
     useradd -m -g jackett -u $UID jackett && \
     mkdir /home/jackett/data/ && \
     apt-get update && apt-get install --no-install-recommends -y ca-certificates wget libicu72 && \

@@ -178,9 +178,6 @@ services:
   jackett:
     build:
       context: dockerfiles/jackett
-      args:
-        UID: 1000
-        GID: 1000
     container_name: jackett
     depends_on:
       - openvpn-client
