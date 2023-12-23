@@ -6,12 +6,9 @@ LABEL description="Alpine + Flood-UI"
 LABEL website="https://github.com/TODO/docker-flood-ui"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # install stuff, get app & cleanup
-RUN addgroup -g $GID flood && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID flood && \
     adduser -S -u $UID -G flood flood && \
     apk add --no-cache curl mediainfo tini tzdata && \
     export version=$(curl --silent "https://api.github.com/repos/jesec/flood/releases/latest" \

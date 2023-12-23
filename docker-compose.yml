@@ -146,9 +146,6 @@ services:
   flood:
     build:
       context: dockerfiles/flood
-      args:
-        UID: 1000
-        GID: 1000
     container_name: flood
     networks:
       - private
