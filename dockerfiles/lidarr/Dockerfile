@@ -7,12 +7,11 @@ LABEL website="https://github.com/TODO/docker-lidarr"
 LABEL version="1.0"
 
 # init
-ARG UID
-ARG GID
 ENV XDG_CONFIG_HOME="/home/lidarr/data"
 
 # add group/user, then get app & cleanup
-RUN addgroup -g $GID lidarr && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID lidarr && \
     adduser -S -u $UID -G lidarr lidarr && \
     apk add --no-cache curl chromaprint tzdata icu-libs libintl sqlite-libs && \
     mkdir -p /home/lidarr/data/ && \
