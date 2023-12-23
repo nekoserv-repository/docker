@@ -75,9 +75,6 @@ services:
   aria2:
     build:
       context: dockerfiles/aria2
-      args:
-        UID: 1000
-        GID: 1000
     container_name: aria2
     restart: unless-stopped
     depends_on:

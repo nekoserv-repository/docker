@@ -6,12 +6,9 @@ LABEL description="Alpine + aria2"
 LABEL website="https://github.com/TODO/docker-aria2"
 LABEL version="1.0"
 
-# init
-ARG UID
-ARG GID
-
 # install
-RUN addgroup -g $GID aria2 && \
+RUN UID=1000 && GID=1000 && \
+    addgroup -g $GID aria2 && \
     adduser -S -u $UID -G aria2 aria2 && \
     apk add --no-cache aria2 tzdata
 
