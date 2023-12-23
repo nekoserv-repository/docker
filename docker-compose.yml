@@ -521,9 +521,6 @@ services:
   sabnzbd:
     build:
       context: dockerfiles/sabnzbd
-      args:
-        UID: 1000
-        GID: 1000
     container_name: sabnzbd
     networks:
       - private

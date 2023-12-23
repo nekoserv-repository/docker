@@ -6,12 +6,9 @@ LABEL description="Debian + python3 + sabnzbd"
 LABEL website="https://github.com/TODO/docker-sabnzbd"
 LABEL version="1.3"
 
-# init
-ARG UID
-ARG GID
-
 # install stuff
-RUN groupadd -g $GID sabnzbd && \
+RUN UID=1000 && GID=1000 && \
+    groupadd -g $GID sabnzbd && \
     useradd -m -g sabnzbd -u $UID sabnzbd && \
     mkdir /home/sabnzbd/sabnzbd-release && \
     mkdir /home/sabnzbd/config && \
