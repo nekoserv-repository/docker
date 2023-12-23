@@ -48,7 +48,7 @@ services:
 
   homepage:
     build:
-      context: dockerfiles/homepage
+      context: homepage
     container_name: homepage
     networks:
       - private
@@ -74,7 +74,7 @@ services:
 
   aria2:
     build:
-      context: dockerfiles/aria2
+      context: aria2
     container_name: aria2
     restart: unless-stopped
     depends_on:
@@ -101,7 +101,7 @@ services:
 
   aria2-webui:
     build:
-      context: dockerfiles/aria2-webui
+      context: aria2-webui
     container_name: aria2-webui
     networks:
       - private
@@ -145,7 +145,7 @@ services:
 
   flood:
     build:
-      context: dockerfiles/flood
+      context: flood
     container_name: flood
     networks:
       - private
@@ -177,7 +177,7 @@ services:
 
   jackett:
     build:
-      context: dockerfiles/jackett
+      context: jackett
     container_name: jackett
     depends_on:
       - openvpn-client
@@ -199,7 +199,7 @@ services:
 
   lidarr:
     build:
-      context: dockerfiles/lidarr
+      context: lidarr
     container_name: lidarr
     networks:
       - private
@@ -225,7 +225,7 @@ services:
 
   medusa:
     build:
-      context: dockerfiles/medusa
+      context: medusa
     container_name: medusa
     networks:
       - private
@@ -251,7 +251,7 @@ services:
 
   metube:
     build:
-      context: dockerfiles/metube
+      context: metube
     container_name: metube
     networks:
       - dummy
@@ -276,7 +276,7 @@ services:
 
   monit:
     build:
-      context: dockerfiles/monit
+      context: monit
     container_name: monit
     hostname: monit-docker
     depends_on:
@@ -319,7 +319,7 @@ services:
 
   nzbhydra2:
     build:
-      context: dockerfiles/nzbhydra2
+      context: nzbhydra2
     container_name: nzbhydra2
     depends_on:
       - openvpn-client
@@ -340,7 +340,7 @@ services:
 
 
   openvpn-client:
-    build: dockerfiles/openvpn-client
+    build: openvpn-client
     container_name: openvpn-client
     cap_add:
       - net_admin
@@ -385,7 +385,7 @@ services:
 
   ping-me:
     build:
-      context: dockerfiles/ping-me
+      context: ping-me
     container_name: ping-me
     networks:
       - private
@@ -406,7 +406,7 @@ services:
 
   pyload:
     build:
-      context: dockerfiles/pyload
+      context: pyload
     container_name: pyload
     networks:
       - dummy
@@ -445,7 +445,7 @@ services:
 
   radarr:
     build:
-      context: dockerfiles/radarr
+      context: radarr
     container_name: radarr
     networks:
       - private
@@ -472,7 +472,7 @@ services:
 
   rtorrent:
     build:
-      context: dockerfiles/rtorrent
+      context: rtorrent
     container_name: rtorrent
     restart: unless-stopped
     depends_on:
@@ -502,7 +502,7 @@ services:
 
   rtorrent-rpc2:
     build:
-      context: dockerfiles/rtorrent-rpc2
+      context: rtorrent-rpc2
     container_name: rtorrent-rpc2
     networks:
       - private
@@ -520,7 +520,7 @@ services:
 
   sabnzbd:
     build:
-      context: dockerfiles/sabnzbd
+      context: sabnzbd
     container_name: sabnzbd
     networks:
       - private
@@ -590,7 +590,7 @@ services:
 
   trilium:
     build:
-      context: dockerfiles/trilium
+      context: trilium
     container_name: trilium
     networks:
       - dummy
