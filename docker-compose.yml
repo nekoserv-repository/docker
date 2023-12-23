@@ -108,10 +108,6 @@ services:
   aria2-webui:
     build:
       context: dockerfiles/aria2-webui
-      args:
-        ARIA2_CONTAINER_NAME: openvpn-client
-        ARIA2_PORT: 6801
-        ARIA2_TOKEN: $ARG_ARIA2_TOKEN
     container_name: aria2-webui
     networks:
       - private
@@ -120,6 +116,9 @@ services:
     restart: unless-stopped
     environment:
       - TZ=$ENV_TIMEZONE
+      - ENV_ARIA2_CONTAINER_NAME=openvpn-client
+      - ENV_ARIA2_PORT=6801
+      - ENV_ARIA2_TOKEN=$ARG_ARIA2_TOKEN
     tmpfs:
       - /tmp
     read_only: true
