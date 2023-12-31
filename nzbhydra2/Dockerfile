@@ -25,9 +25,6 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER nzbhydra2
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/nzbhydra2/data/"]
-
 # change workdir
 WORKDIR /home/nzbhydra2
 

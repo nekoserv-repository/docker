@@ -26,8 +26,5 @@ RUN UID=$(( $RANDOM % 9000 + 1000 )) && \
 # drop privileges
 USER homepage
 
-# static volume
-VOLUME ["/home/homepage/assets/config.yml"]
-
 # run!
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

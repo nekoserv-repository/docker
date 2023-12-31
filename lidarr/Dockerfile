@@ -26,8 +26,5 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER lidarr
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/lidarr/data/"]
-
 # run!
 CMD ["/home/lidarr/Lidarr/Lidarr", "-nobrowser"]

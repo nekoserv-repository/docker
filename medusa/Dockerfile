@@ -23,9 +23,5 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER medusa
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/medusa/data"]
-VOLUME ["/home/postprocessing"]
-
 # run!
 ENTRYPOINT ["/home/medusa/app/SickBeard.py", "--datadir", "/home/medusa/data/"]

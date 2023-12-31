@@ -13,8 +13,5 @@ COPY docker-entrypoint.sh /usr/local/sbin/
 RUN apk add --no-cache drill nftables openvpn tini tzdata && \
     chmod 0700 /usr/local/sbin/docker-entrypoint.sh
 
-# config directory
-VOLUME ["/etc/openvpn/conf"]
-
 # RUN, BABY, RUN
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/sbin/docker-entrypoint.sh"]

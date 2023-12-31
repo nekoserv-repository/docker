@@ -15,8 +15,5 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER aria2
 
-# volume for aria2 data
-VOLUME ["/home/aria2/dl/"]
-
 # run!
 ENTRYPOINT ["/usr/bin/aria2c", "--conf-path=/etc/aria2.conf"]

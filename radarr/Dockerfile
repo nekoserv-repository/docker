@@ -26,8 +26,5 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER radarr
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/radarr/data/"]
-
 # run!
 CMD ["/home/radarr/Radarr/Radarr", "-nobrowser"]

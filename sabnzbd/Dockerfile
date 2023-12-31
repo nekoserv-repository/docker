@@ -45,11 +45,5 @@ RUN python get-pip.py && \
     python -m pip install --no-cache-dir --no-compile --user -r sabnzbd-requirements.txt && \
     rm get-pip.py sabnzbd-requirements.txt
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/sabnzbd/config"]
-VOLUME ["/home/sabnzbd/complete"]
-VOLUME ["/home/postprocessing"]
-VOLUME ["/home/incomplete"]
-
 # run!
 ENTRYPOINT ["python", "/home/sabnzbd/sabnzbd-release/SABnzbd.py", "--logging", "1", "--config-file", "/home/sabnzbd/config/"]

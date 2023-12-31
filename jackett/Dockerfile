@@ -26,8 +26,5 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER jackett
 
-# volume for config, db & runtime stuff
-VOLUME ["/home/jackett/data/"]
-
 # run!
 CMD ["/home/jackett/Jackett/jackett", "--NoUpdates"]

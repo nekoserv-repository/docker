@@ -19,8 +19,5 @@ RUN UID=1000 && GID=1000 && \
 # drop privileges
 USER rtorrent
 
-# volume for rtorrent data
-VOLUME ["/home/rtorrent/"]
-
 # run!
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
