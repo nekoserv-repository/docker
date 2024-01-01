@@ -48,7 +48,7 @@ services:
 
 
   homepage:
-    build: homepage
+    image: $ENV_DOCKER_REPO/homepage
     container_name: homepage
     networks:
       - private
@@ -73,7 +73,7 @@ services:
 
 
   aria2:
-    build: aria2
+    image: $ENV_DOCKER_REPO/aria2
     container_name: aria2
     restart: unless-stopped
     depends_on:
@@ -99,7 +99,7 @@ services:
 
 
   aria2-webui:
-    build: aria2-webui
+    image: $ENV_DOCKER_REPO/aria2-webui
     container_name: aria2-webui
     networks:
       - private
@@ -142,7 +142,7 @@ services:
 
 
   flood:
-    build: flood
+    image: $ENV_DOCKER_REPO/flood
     container_name: flood
     networks:
       - private
@@ -173,7 +173,7 @@ services:
 
 
   jackett:
-    build: jackett
+    image: $ENV_DOCKER_REPO/jackett
     container_name: jackett
     depends_on:
       - openvpn-client
@@ -194,7 +194,7 @@ services:
 
 
   lidarr:
-    build: lidarr
+    image: $ENV_DOCKER_REPO/lidarr
     container_name: lidarr
     networks:
       - private
@@ -219,7 +219,7 @@ services:
 
 
   medusa:
-    build: medusa
+    image: $ENV_DOCKER_REPO/medusa
     container_name: medusa
     networks:
       - private
@@ -244,7 +244,7 @@ services:
 
 
   metube:
-    build: metube
+    image: $ENV_DOCKER_REPO/metube
     container_name: metube
     networks:
       - dummy
@@ -268,7 +268,7 @@ services:
 
 
   monit:
-    build: monit
+    image: $ENV_DOCKER_REPO/monit
     container_name: monit
     hostname: monit-docker
     depends_on:
@@ -310,7 +310,7 @@ services:
 
 
   nzbhydra2:
-    build: nzbhydra2
+    image: $ENV_DOCKER_REPO/nzbhydra2
     container_name: nzbhydra2
     depends_on:
       - openvpn-client
@@ -331,7 +331,7 @@ services:
 
 
   openvpn-client:
-    build: openvpn-client
+    image: $ENV_DOCKER_REPO/openvpn-client
     container_name: openvpn-client
     cap_add:
       - net_admin
@@ -375,7 +375,7 @@ services:
 
 
   ping-me:
-    build: ping-me
+    image: $ENV_DOCKER_REPO/ping-me
     container_name: ping-me
     networks:
       - private
@@ -396,6 +396,7 @@ services:
 
   proton:
     build: proton
+    #image: $ENV_DOCKER_REPO/proton
     container_name: proton
     restart: unless-stopped
     depends_on:
@@ -413,7 +414,7 @@ services:
 
 
   pyload:
-    build: pyload
+    image: $ENV_DOCKER_REPO/pyload
     container_name: pyload
     networks:
       - dummy
@@ -451,7 +452,7 @@ services:
 
 
   radarr:
-    build: radarr
+    image: $ENV_DOCKER_REPO/radarr
     container_name: radarr
     networks:
       - private
@@ -477,7 +478,7 @@ services:
 
 
   rtorrent:
-    build: rtorrent
+    image: $ENV_DOCKER_REPO/rtorrent
     container_name: rtorrent
     restart: unless-stopped
     depends_on:
@@ -506,7 +507,7 @@ services:
 
 
   rtorrent-rpc2:
-    build: rtorrent-rpc2
+    image: $ENV_DOCKER_REPO/rtorrent-rpc2
     container_name: rtorrent-rpc2
     networks:
       - private
@@ -523,7 +524,7 @@ services:
 
 
   sabnzbd:
-    build: sabnzbd
+    image: $ENV_DOCKER_REPO/sabnzbd
     container_name: sabnzbd
     networks:
       - private
@@ -592,7 +593,7 @@ services:
 
 
   trilium:
-    build: trilium
+    image: $ENV_DOCKER_REPO/trilium
     container_name: trilium
     networks:
       - dummy
