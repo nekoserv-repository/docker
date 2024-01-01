@@ -395,8 +395,7 @@ services:
 
 
   proton:
-    build: proton
-    #image: $ENV_DOCKER_REPO/proton
+    image: $ENV_DOCKER_REPO/proton
     container_name: proton
     restart: unless-stopped
     depends_on:
