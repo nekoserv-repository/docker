@@ -109,7 +109,7 @@ services:
       - TZ=$ENV_TIMEZONE
       - ENV_ARIA2_CONTAINER_NAME=openvpn-client
       - ENV_ARIA2_PORT=6801
-      - ENV_ARIA2_TOKEN=$ARG_ARIA2_TOKEN
+      - ENV_ARIA2_TOKEN=$ENV_ARIA2_TOKEN
     tmpfs:
       - /tmp
     read_only: true

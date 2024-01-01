@@ -6,9 +6,6 @@ LABEL description="Alpine & aria2 webui (nginx rpc2)"
 LABEL website="https://github.com/TODO/docker-aria2-webui"
 LABEL version="1.0"
 
-# init
-#ARG ARIA2_TOKEN
-
 # copy nginx template
 COPY nginx.conf /etc/nginx/nginx.conf.template
 
@@ -24,9 +21,9 @@ RUN apk add --no-cache curl gettext-envsubst nginx tzdata && \
     sed -i -e "s/port: 6800/port: window.location.port || (location.protocol === 'https:' ? '443' : '80')/g" /home/aria2-webui/docs/app.js && \
     sed -i -e 's/path: "\/jsonrpc"/path: "\/aria2\/jsonrpc"/g' /home/aria2-webui/docs/app.js && \
     sed -i -e "s/auth: {}/auth: { token: '\$ENV_ARIA2_TOKEN' }/g" /home/aria2-webui/docs/app.js && \
-    #sed -i -e "s/auth: {}/auth: { token: '`echo $ARIA2_TOKEN`' }/g" /home/aria2-webui/docs/app.js && \
     sed -i -e "s/encrypt: !1/encrypt: true/g" /home/aria2-webui/docs/app.js && \
     rm aria2-webui.tar.gz && \
+    rm /etc/nginx/nginx.conf && \
     apk del --purge curl
 
 # drop privileges
