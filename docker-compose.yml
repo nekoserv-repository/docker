@@ -42,6 +42,7 @@ services:
       - nzbhydra2
       - openvpn-client
       - ping-me
+      - proton
       - rtorrent
       - rtorrent-rpc2
 
@@ -391,6 +392,24 @@ services:
       interval: 10s
       timeout: 2s
       retries: 1
+
+
+  proton:
+    build: proton
+    container_name: proton
+    restart: unless-stopped
+    depends_on:
+      - openvpn-client
+    network_mode: service:openvpn-client
+    environment:
+      - TZ=$ENV_TIMEZONE
+      - ENV_GW=$ENV_GW
+      - ENV_RTORRENT_PORT=$ENV_RTORRENT_PORT
+      - ENV_RTORRENT_URL=$ENV_RTORRENT_URL
+      - ENV_ARIA2_URL=$ENV_ARIA2_URL
+      - ENV_ARIA2_TOKEN=$ENV_ARIA2_TOKEN
+      - ENV_ARIA2_PORT=$ENV_ARIA2_PORT
+    read_only: true
 
 
   pyload:
