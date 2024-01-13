@@ -124,6 +124,24 @@ services:
       - "traefik.http.routers.aria2.tls.certresolver=default-ssl"
 
 
+  email-purge:
+    image: ghcr.io/nekoserv-repository/email-purge:latest
+    container_name: email-purge
+    restart: unless-stopped
+    environment:
+      - TZ=$ENV_TIMEZONE
+      - EMAIL_SVC_IMAP=$ENV_EMAIL_SVC_IMAP
+      - EMAIL_SVC_SMTP=$ENV_EMAIL_SVC_SMTP
+      - EMAIL_ACCOUNT=$ENV_EMAIL_ACCOUNT
+      - EMAIL_PASSWD=$ENV_EMAIL_PASSWD
+      - EMAIL_FOLDER=$ENV_EMAIL_FOLDER
+      - SPAM_URL=$ENV_SPAM_URL
+      - SPAM_LOGIN_PASSWD=$ENV_SPAM_LOGIN_PASSWD
+    tmpfs:
+      - /tmp
+    read_only: true
+
+
   flaresolverr:
     image: flaresolverr/flaresolverr
     container_name: flaresolverr
