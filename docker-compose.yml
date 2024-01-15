@@ -209,6 +209,14 @@ services:
       interval: 10s
       timeout: 2s
       retries: 1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/jackett`)"
+      - "traefik.http.routers.jackett.tls=true"
+      - "traefik.http.routers.jackett.middlewares=global-auth@file"
+      - "traefik.http.routers.jackett.tls.certresolver=default-ssl"
+      - "traefik.http.routers.jackett.service=service-jackett"
+      - "traefik.http.services.service-jackett.loadbalancer.server.port=9117"
 
 
   lidarr:
@@ -346,6 +354,14 @@ services:
       interval: 10s
       timeout: 2s
       retries: 1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nzbhydra2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/nzbhydra`)"
+      - "traefik.http.routers.nzbhydra2.tls=true"
+      - "traefik.http.routers.nzbhydra2.middlewares=global-auth@file"
+      - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
+      - "traefik.http.routers.nzbhydra2.service=service-nzbhydra2"
+      - "traefik.http.services.service-nzbhydra2.loadbalancer.server.port=5076"
 
 
   openvpn-client:
@@ -376,20 +392,6 @@ services:
       interval: 1m
       timeout: 2s
       retries: 1
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jackett.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/jackett`)"
-      - "traefik.http.routers.jackett.tls=true"
-      - "traefik.http.routers.jackett.middlewares=global-auth@file"
-      - "traefik.http.routers.jackett.tls.certresolver=default-ssl"
-      - "traefik.http.routers.jackett.service=service-jackett"
-      - "traefik.http.services.service-jackett.loadbalancer.server.port=9117"
-      - "traefik.http.routers.nzbhydra2.rule=Host(`$ENV_DOMAIN`) && PathPrefix(`/nzbhydra`)"
-      - "traefik.http.routers.nzbhydra2.tls=true"
-      - "traefik.http.routers.nzbhydra2.middlewares=global-auth@file"
-      - "traefik.http.routers.nzbhydra2.tls.certresolver=default-ssl"
-      - "traefik.http.routers.nzbhydra2.service=service-nzbhydra2"
-      - "traefik.http.services.service-nzbhydra2.loadbalancer.server.port=5076"
 
 
   ping-me:
