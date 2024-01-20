@@ -19,6 +19,7 @@ services:
     depends_on:
       - homepage
       - aria2-webui
+      - email-purge
       - flood
       - lidarr
       - medusa
