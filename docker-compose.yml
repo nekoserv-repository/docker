@@ -590,7 +590,8 @@ services:
         aliases:
           - proxy.traefik
     ports:
-      - "443:443"
+      - "443:443/tcp"
+      - "443:443/udp"
     environment:
       - TZ=$ENV_TIMEZONE
       - OVH_ENDPOINT=$ENV_OVH_ENDPOINT
