@@ -29,6 +29,7 @@ services:
       - pyload
       - radarr
       - sabnzbd
+      - socket-proxy
       - traefik
       - trilium
       - vpn-services
