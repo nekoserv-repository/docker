@@ -56,25 +56,27 @@ def check_containers():
 
 ## check if port is open or not
 def is_port_open(host, port, proto, open_list, closed_list):
-  # check tcp port
-  if proto != "tcp":
+  proto_dict = { "tcp": socket.SOCK_STREAM, "udp": socket.SOCK_DGRAM }
+  # check protocol availability
+  if proto not in proto_dict:
     print(proto+" is not supported yet")
-    return True # not a failure, yet
-  # check tcp port
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    return False
+  port_and_proto = port+"/"+proto
+  # check port
+  s = socket.socket(socket.AF_INET, proto_dict[proto])
   try:
     r = s.connect_ex((host, int(port)))
   except:
-    closed_list.append("error : "+host+" is NOT reachable on port "+port+"/"+proto)
+    closed_list.append("error : "+host+" is NOT reachable on port "+port_and_proto)
     return False
   finally:
     s.close()
   # check results
   if r == 0:
-    open_list.append(host+" : port "+port+" is open")
+    open_list.append(host+" : port "+port_and_proto+" is open")
     return True
   else:
-    closed_list.append(host+" : port "+port+" is NOT open")
+    closed_list.append(host+" : port "+port_and_proto+" is NOT open")
     return False
 
 
