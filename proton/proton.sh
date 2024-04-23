@@ -21,7 +21,7 @@ sleep 10;
 while [ 1 ]; do
   ### RTORRENT
   # port forwarding request
-  port=$(python -m natpmp --gateway $gw $rtorrent_port $rtorrent_port 2>/dev/null | sed -e 's/.*public port \(.*\)\, lifetime.*/\1/');
+  port=$(natpmp-client.py -g $gw $rtorrent_port $rtorrent_port 2>/dev/null | sed -e 's/.*public port \(.*\)\, lifetime.*/\1/');
   # set forwarded port to rtorrent
   date=$(date "+%m/%d (%H:%M)");
   if [ -z "$port" ]; then
@@ -37,7 +37,7 @@ while [ 1 ]; do
 
   ### ARIA2
   # port forwarding request
-  port=$(python -m natpmp --gateway $gw $aria2_port $aria2_port 2>/dev/null | sed -e 's/.*public port \(.*\)\, lifetime.*/\1/');
+  port=$(natpmp-client.py -g $gw $aria2_port $aria2_port 2>/dev/null | sed -e 's/.*public port \(.*\)\, lifetime.*/\1/');
   # set forwarded port to rtorrent
   date=$(date "+%m/%d (%H:%M)");
   if [ -z "$port" ]; then
