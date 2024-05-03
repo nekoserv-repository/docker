@@ -573,7 +573,7 @@ services:
 
 
   traefik:
-    image: traefik:2.11
+    image: traefik:3.0
     container_name: traefik
     depends_on:
       - socket-proxy
