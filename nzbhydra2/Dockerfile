@@ -18,7 +18,6 @@ RUN UID=1000 && GID=1000 && \
     curl -L https://github.com/theotherp/nzbhydra2/releases/download/v$version/nzbhydra2-$version-amd64-linux.zip -o nzbhydra2.zip && \
     unzip -q nzbhydra2.zip -d /home/nzbhydra2 && \
     chown -R nzbhydra2 /home/nzbhydra2 && \
-    chmod +x /home/nzbhydra2/nzbhydra2 /home/nzbhydra2/core && \
     apt-get autoremove --purge -y curl unzip && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
