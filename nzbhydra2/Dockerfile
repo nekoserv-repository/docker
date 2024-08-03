@@ -7,7 +7,8 @@ LABEL website="https://github.com/TODO/docker-nzbhydra2"
 LABEL version="1.0"
 
 # add group/user, then get app & cleanup
-RUN UID=1000 && GID=1000 && \
+RUN if grep -q 1000 /etc/passwd; then userdel $(id -nu 1000); fi && \
+    UID=1000 && GID=1000 && \
     groupadd -g $GID nzbhydra2 && \
     useradd -m -g nzbhydra2 -u $UID nzbhydra2 && \
     mkdir /home/nzbhydra2/data && \
