@@ -14,10 +14,12 @@ COPY *.py /usr/local/bin/
 RUN UID=1000 && GID=1000 && \
     addgroup -g $GID monit && \
     adduser -S -h /tmp -u $UID -G monit monit && \
-    apk add --no-cache curl gettext-envsubst monit tzdata && \
+    echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    apk add --no-cache curl gettext-envsubst monit tzdata uv@edge && \
     chown monit:monit /etc/monitrc /usr/local/bin/* && \
     chmod 0500 /etc/monitrc /usr/local/bin/docker_*.py && \
-    pip3 install --no-cache-dir --upgrade pip docker
+    uv pip install --system docker && \
+    rm -rf /var/cache/apk/* ~/.cache/*
 
 # drop privileges
 USER monit

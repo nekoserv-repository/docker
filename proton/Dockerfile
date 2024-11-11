@@ -11,12 +11,13 @@ COPY proton.sh /usr/local/sbin/
 COPY aria2.py /usr/local/sbin/
 
 # install stuff
-RUN apk add --no-cache py3-pip tini tzdata && \
-    pip install --break-system-packages --no-cache-dir py-natpmp urllib3 && \
+RUN echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    apk add --no-cache python3 py3-pip tini tzdata uv@edge && \
+    uv pip install --break-system-packages --system py-natpmp urllib3 && \
+    apk del --purge py3-pip uv && \
+    rm -rf /var/cache/apk/* ~/.cache/* && \
     chmod 0700 /usr/local/sbin/proton.sh && \
     chmod 0700 /usr/local/sbin/aria2.py
 
 # RUN, BABY, RUN
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/sbin/proton.sh"]
-
-#docker tag 9b17ba233bcb protontest:latest
